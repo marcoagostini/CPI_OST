@@ -1,20 +1,17 @@
 \documentclass[10pt,a4paper]{scrartcl}  
 
-%Define which packages are used
-\usepackage{geometry} 
-\usepackage{graphicx}
-\usepackage[english]{babel}
-\usepackage[utf8]{inputenc}
-\usepackage{blindtext}
-\usepackage{subfiles}
-
-\graphicspath{ {images/} }
-\geometry{top=2.5cm,left=2.5cm,right=2.5cm,bottom=2.5cm} 
+\input{header.tex}
 
 % ------------------------------------------
 \begin{document}
 	\include{sections/title}
 	
-	\input{sections/01_introduction.tex}
+	\input{sections/01_week}
+	\input{sections/02_week}
+	\input{sections/03_week}
+	\input{sections/04_week}
+	\input{sections/05_week}
+	\input{sections/06_week}
+	
 
 \end{document}
