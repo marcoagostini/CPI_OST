@@ -14,13 +14,14 @@ The undefined behaviour is defined in the C++ standard (funny, isn't it?). C++ h
 \subsection{C++ Compilation Process}
 \textbf{*.cpp files for source code}
 \begin{itemize}
-  \itemsep0em 
+  \itemsep -0.5em 
   \item Also called "Implementation File"
   \item Function implementations (can be in .h files as well)
   \item Source of compilation - aka "Translation Unit"
 \end{itemize}
 \textbf{*.h files for interfaces and templates}
 \begin{itemize}
+  \itemsep -0.5em 
   \item Called "Header File"
   \item Declarations and definitions to be used in other implementation files.
   \item Textual inclusion through a pre-processor (C++20 will incorporate a "Module" mechanism)
@@ -29,7 +30,7 @@ The undefined behaviour is defined in the C++ standard (funny, isn't it?). C++ h
 
 \textbf{3 Phases of Compilation}
 \begin{itemize}
-  \itemsep0em 
+  \itemsep -0.5em 
   \item \textbf{Preprocessor} – Textual replacement of preprocessor directives (\#include)
   \item \textbf{Compiler} – Translation of C++ code into machine code (source file to object file)
   \item \textbf{Linker} - Combination of object files and libraries into libraries and executables
@@ -42,14 +43,14 @@ The undefined behaviour is defined in the C++ standard (funny, isn't it?). C++ h
 \begin{center}
 $<return-type> <function-name> (<parameters>) \{ /* body */ \}$
 \end{center}
- Tells the compiler that there is a function named $<function-name>$ that takes the parameters $<parameters>$ and returns a value of type $<return-type>$. The Signature of a function is just the combination of name and the parameter types. \\
+ Tells the compiler that there is a function named $<function-name>$ that takes the parameters $<parameters>$ and returns a value of type $<return-type>$. The Signature of a function is just the combination of name and the parameter types. 
  
 \textbf{One Definition Rule}\\ 
- While a program element can be declared several times without problem there can be only one definition of it. \textbf{(ODR = One Definition Rule)} \\
+ While a program element can be declared several times without problem there can be only one definition of it. \textbf{(ODR = One Definition Rule)}
  
- \textbf{Include Guard}\\
+\textbf{Include Guard}\\
 Include guards ensure that a header file is only included once. Multiple inclusions could violate the One Definition Rule when the header contains definitions.
-\begin{lstlisting}[language=C++]
+\begin{lstlisting}[language=c++]
 #ifndef SAYHELLO_H_
 #define SAYHELLO_H_
 #include <iosfwd>

@@ -1,0 +1,150 @@
+%Goals 
+%You can implement your own data types
+%You know the elements a class consists of
+%You know how to overload operators for classes
+%You know the correct way to read and print objects
+
+\section{Classes and Operators}
+\subsection{Classes}
+Does one thing and is well named after that. Consists of member functions with only a few lines. Has a class invariant: provides guarantee about its state (values of the member variables). Constructors establish that invariant. Is easy to use without complicated protocol sequence requirements.
+
+A class is usually defined in a header file. At the end of a class definition a
+semicolon is required. 
+
+\textbf{Class Head} \\
+Keywords for defining a class: class or struct. Default visibility for members of the class are: private for class and public for struct.
+
+\textbf{Access Specifier}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item private: visible only inside the class (and friends); for hidden data members
+  \item protected: also visible in subclasses 
+  \item public: visible from everywhere; for the interface of the class
+\end{itemize}
+
+\textbf{Member Variables} \\
+Don't make member variables const as it prevents copy assignment. Don't add members to communicate
+between member function calls.
+
+\textbf{Static Member Functions and Variables}\\
+No $static$ in *.cpp file only in *.h file!
+
+\textbf{Constructors} \\
+Function with name of the class and no return type. 
+\begin{itemize}
+    \item Default Constructor -No parameters. Implicitly available if there are no other explicit constructors. Has to initialize member variables with default values.
+    \item Copy Constructor - Has one $<$own-type$>$ const \& parameter. Implicitly available (unless there is an explicit move constructor or assignment operator). Copies all member variables.
+    \item Move Constructor - Has one $<$own-type$>$ \&\& parameter. Implicitly available (unless there is an explicit copy constructor or assignment operator). Moves all members
+    \item Typeconversation Constructor - Has one $<$other-type$>$ const \& parameter. Converts the input type if possible. Declare explicit to avoid unexpected conversions.
+    \item Initializer List Constructor - Has one std::initializer\_list parameter. Does not need to be explicit, implicit conversion is usually desired. Initializer List constructors are preferred if a variable is initialized with $\{$ $\}$
+    \item Destructor - Named like the default constructor but with a $\sim$. Must release all resources. Implicitly available. Must not throw an exception. Called automatically at the end of the block for local instances.
+\end{itemize}
+
+\begin{lstlisting}[language=C++]
+// File: date.h
+#ifndef DATE_H_ 
+#define DATE_H_
+class Date { // HEAD
+	int year, month, day; // MEMBER VARIABLES
+public:
+	Date(int year, int month, int day) // CONSTRUCTOR
+	: year{year}, month{month}, day{day} {/*...*/}
+	static bool isLeapYear(int year) {/*...*/}
+private:
+	bool isValidDate() const {/*...*/} };
+#endif /* DATE_H_ */
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++]
+class Date {
+public:
+    Date(int year, int month, int day);
+    Date(); // Default-Constructor
+    Date() = default; // explizit Default-Constructor
+    Date(Date const &); // Copy-Constructor
+    Date(Date &&); // Move-Constructor
+    explicit Date(std::string const &); // Typeconversation-Constructor
+    Date(std::initializer_list<Element> elements); // Initializer List-Constructor
+    ~Date(); // Destructor
+    Date(Date const &) = delete; // delete implicit Copy-Constructor
+};
+\end{lstlisting}
+
+\subsection{Inheritance}
+ Base classes are specified after the name: $class <name> : <base1>, ... , <baseN>$. Multiple inheritance is possible and inheritance can specify visibility. If no visibility is specified the default of the inheriting class is used.
+
+\begin{lstlisting}[language=C++]
+class Base { 
+private:
+	int onlyInBase; 
+protected:
+	int baseAndInSubclasses;
+public:
+	int everyoneCanFiddleWithMe 
+};
+class Sub : public Base {
+	//Can see baseAndInSubclasses and
+	//everyoneCanFiddleWithMe 
+};	
+\end{lstlisting}
+
+\subsection{Operator Overloading}
+Custom operators can be overloaded for user-defined types. Declared like a function, with a special name: <returntype> operator op(<parameters>);. 
+Unary operators -> one parameters and binary operators -> two parameters.
+
+\textbf{Free Operator} \\
+Free operator$<$ uses two parameters of Date each $const$ \& return type $bool$. Is inline when defined in header. The only problem we have is that we don't have access to private members.
+\begin{lstlisting}[language=C++]
+// File Any.cpp
+#include "Date.h" Any.cpp
+#include <iostream>
+void foo() {
+	std::cout << Date::myBirthday;
+	Date d{};
+	std::cin >> d;
+	std::cout << "is d older? " << (d < Date::myBirthday); 
+}
+
+// File Date.h
+class Date {
+	int year, month, day; // private :-( 
+};
+inline bool operator<(Date const & lhs, Date const & rhs) {
+	return lhs.year < rhs.year ||  // Does not WOKR!
+	(lhs.year == rhs.year && (lhs.month < rhs.month ||
+		(lhs.month == rhs.month && lhs.day == rhs.day)));
+}
+\end{lstlisting}
+
+\textbf{Member Operator} \\
+Member operator$<$ uses one parameter of type $Date$, which is $const \&$, return type $bool$ and Right-hand side of operation. Implicit this object: $const$ due to qualifier, left-hand side of operation.
+\begin{lstlisting}[language=C++]
+// File Any.cpp
+#include "Date.h" 
+#include <iostream>
+void foo() {
+	std::cout << Date::myBirthday;
+	Date d{};
+	std::cin >> d;
+	std::cout << "is d older? " << (d < Date::myBirthday); 
+}
+// File Date.h
+class Date {
+	int year, month, day; // private :-)
+	bool operator<(Date const & rhs) const {
+	return year < rhs.year ||
+	(year == rhs.year && (month < rhs.month ||
+	(month == rhs.month && day == rhs.day)));
+	} 
+};
+\end{lstlisting}
+
+
+\break
+
+
+
+
+
+
+
