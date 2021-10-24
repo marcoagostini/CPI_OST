@@ -1,0 +1,20 @@
+\documentclass[10pt,a4paper]{scrartcl}  
+
+%Define which packages are used
+\usepackage{geometry} 
+\usepackage{graphicx}
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{blindtext}
+\usepackage{subfiles}
+
+\graphicspath{ {images/} }
+\geometry{top=2.5cm,left=2.5cm,right=2.5cm,bottom=2.5cm} 
+
+% ------------------------------------------
+\begin{document}
+	\include{sections/title}
+	
+	\input{sections/01_introduction.tex}
+
+\end{document}
