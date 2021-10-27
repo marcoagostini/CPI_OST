@@ -1,1 +1,73 @@
+% Goals
+% You can group and structure names into namespaces
+% You can resolve function using argument dependent lookup
+% You can create enumerations as simple types with few values
+% You know how to implement your own arithmetic type and are aware of possible ambiguities
+
 \section{Enums and Namespaces}
+
+\subsection{Namespaces}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Namespaces are scopes for grouping and preventing name clashes
+  \item Global namespaces has the :: prefix
+  \item Nesting of namespaces is possible
+  \item Nesting of scopes allows hiding of names
+  \item Namespaces can only be defined outside of classes and functions
+  \item The same same namespace can be opened and closed multiple times
+  \item Qualified names are. used to access names in a namespace: demo::subdemo::foo()
+  \item A name with a leading :: is called fully qualified name: ::std::cout.
+\end{itemize}
+%Code example 
+\begin{lstlisting}
+	
+\end{lstlisting}
+
+\textbf{Using Declarations}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Import a name from a namespace into the current scope
+  	\SubItem{That name can be used without a namespace prefix}
+  	\SubItem{Useful if the name is used very often}
+  \item Alternative: using alias fo types if name is long
+  \item There are also using directives, which import ALL names of a namespace into the current scope.
+  		\SubItem{Use them only in local scope to avoid "pollution" of your namespace.}
+\end{itemize}
+
+\textbf{Anonymous Namespaces}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Special case: omit name after namespace
+  \item Implicit using directive for the chosen stream
+  \item Hides modules internals
+  \item Use them only in source files (*.cpp)
+\end{itemize}
+
+% Code example of Date
+
+\subsection{Name Resolution of Namespace Members}
+Types and (non-member) functions belonging to that type should be placed in a common namespace. The Advantage is \textit{Argument Dependent Lookup! ADL:} When the compiler encounter an unqualified function or operator call with an argument of a user-defined type it looks into the namespaces in which that type is defined to resolve the function\/operator. E.g. it is not necessary to write std:: in front of for\_each when std::vector::begin() is an argument of the function.
+
+% Sample with calendar and print function that does not work.. and ADL examples
+
+\subsection{Enumerations}
+Enumerations are useful to represent types with only a few values. An enumeration creates a new type that can easily be converted to an integral type.  The individual values (enumerators) are specified in the type. Unless specified explicitly, the values start with 0 and increase by 1.
+
+% Code example Enumerations, Scope of enumeration
+
+\subsection{Arithmetic Types}
+Disclaimer: You usually do not want to implement your own arithmetic types! We will cover the basics.
+
+\begin{itemize}
+	\itemsep -0.5em
+    \item Arithmetic types must be equality comparable
+    \item Boost can be used to get != operator $\rightarrow$ boost::equality\_comparable
+    \item It might be convenient to have the output operator
+    \item Result must be in a specific range (Modulo)
+\end{itemize}
+\vspace{0.3cm}
+
+
+% Fragen
+% Inline keyword? Friends keyword?
+% Eine Freie Funktion kann nicht auf die Member Variablen zugreifen.
