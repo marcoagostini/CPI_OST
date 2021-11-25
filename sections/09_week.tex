@@ -1,0 +1,46 @@
+% Goals
+% You can explain the difference between Java Generics and C++ Templates
+% You can implement simple generic functions
+% You can implement variadic generic functions
+% You can describe the type concepts required by a function template
+
+\section{Function Templates} 
+Can be compared as a Generic in Java. The keyword "template" is used to declare a template. The template parameter list contains one or more templates parameters.
+The compiler resolves the function template and figures out the template arguments. C++ uses duck-typing. So every type can be used as argument as long as it supports the used operations.
+
+\begin{lstlisting}[language=C++]
+template <Template-Parameter-List>
+FunctionDefinition
+\end{lstlisting}
+
+\begin{lstlisting}[language=C++]
+// file min.h
+template <typename T>
+T min(T left, T right) {
+	return left < right ? left : right;
+}
+// file smaller.cpp
+#include "min.h" smaller.cpp
+#include <iostream>
+int main() {
+	int first;
+	int second;
+	if (std::cin >> first >> second) {
+		auto const smaller = min(first, second); std::cout << "Smaller of " << first << " and " << second << " is: " << smaller << '\n';
+	}
+}
+\end{lstlisting}
+
+\textbf{Template Definition}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Templates are usually defined in a header file
+  	\SubItem{A compiler needs to see the whole template definition to create an instance}
+  	\SubItem{Function template definitions are implicitly inline}
+  \item The definition in a source file is possible, but then it can only be used in that translation unit.
+  \item Type checking happens twice
+  	\SubItem{When the template is defined: only basic checks are performed: syntax and resolution of names that are independent of the template parameters.}
+  	\SubItem{When the template is instantiated (used): The compiler checks whether the template arguments can be used as required by the template.}
+\end{itemize}
+
+\textbf{Template Argument Deduction}

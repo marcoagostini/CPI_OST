@@ -1,0 +1,37 @@
+\section{STL Algorithms}
+The "algorithm.h" are the algorithms defined for general purpose. and in the "numeric.h" are the general numeric functions.
+
+What is are the advantages of the STL algorithms?
+\begin{itemize}
+	\itemsep -0.5em 
+	\item Correctness
+		\SubItem{It is much easier to use an algorithm correctly than implementing loops correctly.}
+	\item Readability
+		\SubItem{Applying the correct algorithm expresses your intention much better than a loop.}
+		\SubItem{Someone else will appreciate it when the code is readable and easily understandable.}
+	\item Performance
+		\SubItem{Algorithms might perform better than handwritten loops}
+\end{itemize}
+
+\textbf{Iterator for Ranges} \\
+\begin{itemize}
+  \itemsep 0em 
+  \item First - Iterator pointing to the first element.
+  \item Last - Iterator pointing to the last element.
+  \item if First == Last the range is empty.
+\end{itemize}
+
+\begin{lstlisting}[language=C++]
+std::vector<int> values{54, 23, 17, 95, 85, 57, 12, 9}; 
+std::xxx(begin(values), end(values), ...);
+\end{lstlisting}
+
+\subsection{Functor}
+
+%TODO write definition of the functor
+
+\subsection{Examples}
+
+\subsection{Pitfalls}
+
+\pagebreak

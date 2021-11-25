@@ -1,1 +1,11 @@
 .DS_Store
+.texpadtmp/main.aux
+.texpadtmp/main.bbl
+.texpadtmp/main.bcf
+.texpadtmp/main.blg
+.texpadtmp/main.log
+.texpadtmp/main.out
+.texpadtmp/main.run.xml
+.texpadtmp/main.synctex.gz
+.texpadtmp/main.toc
+.texpadtmp/sections/title.aux
