@@ -9,27 +9,70 @@
   \itemsep -0.5em 
   \item Enums can be used for types that hold a few values.
   \item Every enum field can be converted into an int, starting with the 0. 
+  \item The names of an Enum cant be given out as default. For this a lookuptable is needed.
+  \item With the class keyword (Scoped Enum) the type of the enum is not visible outside the namespace. The normal unscoped Enum is visible outside the namespace.
 \end{itemize}
 
+\begin{lstlisting}[language=C++]
+enum [class] <name> { 
+	<enumerators>
+};
 
-\subsection{Namespaces}
+enum class day_of_week {
+	Mon, Tue, Wed, Thu, Fri, Sat, Sun // 0 - 6
+	
+	day_of_week operator++ (day_of_week & aDay) {
+		int day = (aDay + 1) % (Sun + 1); // Convertion to int
+		aDay = static_cast<day_of_week>(day);
+		return aDay;
+	}
+};
+\end{lstlisting}
+
+\pagebreak
+
+
+\section{Namespaces}
 \begin{itemize}
   \itemsep -0.5em 
-  \item Namespaces are scopes for grouping and preventing name clashes
-  \item Global namespaces has the :: prefix
-  \item Nesting of namespaces is possible
-  \item Nesting of scopes allows hiding of names
-  \item Namespaces can only be defined outside of classes and functions
-  \item The same same namespace can be opened and closed multiple times
-  \item Qualified names are. used to access names in a namespace: demo::subdemo::foo()
+  \item Namespaces are scopes for grouping and preventing name clashes.
+  \item Global namespaces has the :: prefix.
+  \item Nesting of namespaces is possible.
+  \item Nesting of scopes allows hiding of names.
+  \item Namespaces can only be defined outside of classes and functions.
+  \item The same same namespace can be opened and closed multiple times.
+  \item Qualified names are. used to access names in a namespace: \lstinline|demo::subdemo::foo()|
   \item A name with a leading :: is called fully qualified name: ::std::cout.
+  \item \lstinline|using namespace| shouldn't be used.
 \end{itemize}
 %Code example 
-\begin{lstlisting}
+\begin{lstlisting}[language=C++]
+namespace demo {
+void foo(); //1
+namespace subdemo {
+void foo() {/*2*/}
+} // subdemo
+} // demo
+
+namespace demo {
+void bar() {
+  foo(); //1
+  subdemo::foo(); //2
+}
+}
+
+void demo::foo() { /*1*/ } // definition
+
+int main() {
+  using demo::subdemo::foo;
+  foo(); //2
+  demo::foo(); //1
+  demo::bar();
+}
 	
 \end{lstlisting}
 
-\textbf{Using Declarations}
+\subsection{Using Declaration}
 \begin{itemize}
   \itemsep -0.5em 
   \item Import a name from a namespace into the current scope
@@ -40,7 +83,7 @@
   		\SubItem{Use them only in local scope to avoid "pollution" of your namespace.}
 \end{itemize}
 
-\textbf{Anonymous Namespaces}
+\subsection{Anonymous Namespaces}
 \begin{itemize}
   \itemsep -0.5em 
   \item Special case: omit name after namespace
@@ -56,10 +99,6 @@ Types and (non-member) functions belonging to that type should be placed in a co
 
 % Sample with calendar and print function that does not work.. and ADL examples
 
-\subsection{Enumerations}
-Enumerations are useful to represent types with only a few values. An enumeration creates a new type that can easily be converted to an integral type.  The individual values (enumerators) are specified in the type. Unless specified explicitly, the values start with 0 and increase by 1.
-
-% Code example Enumerations, Scope of enumeration
 
 \subsection{Arithmetic Types}
 Disclaimer: You usually do not want to implement your own arithmetic types! We will cover the basics.
@@ -71,9 +110,4 @@ Disclaimer: You usually do not want to implement your own arithmetic types! We w
     \item It might be convenient to have the output operator
     \item Result must be in a specific range (Modulo)
 \end{itemize}
-
-% Fragen
-% Inline keyword? Friends keyword?
-% Eine Freie Funktion kann nicht auf die Member Variablen zugreifen.
-
 \pagebreak

@@ -1,0 +1,63 @@
+\subsection{Iterators}
+Different containers support iterators of different capabilities. Categories are formed around increasing "power".
+
+\textbf{Input Iterator} \\
+Supports reading the "current" element (of type Element). Allows for one-pass input algorithms.  Can be compared with == and !=. Can also be copied.
+
+\begin{lstlisting}[language=C++]
+struct input_iterator_tag{};
+
+Element operator*();
+It & operator++();
+It operator++(int);
+bool operator==(It const &);
+bool operator!=(It const &);
+It & operator=(It const &);
+It(It const &); //copy ctor
+\end{lstlisting}
+
+\textbf{Forward Iterator} \\
+Can do whatever an input iterator can do plus: supports changing the current element. Still allows only for one-pass input algorithms.
+\begin{lstlisting}[language=C++]
+struct forward_iterator_tag{};
+Element & operator*();
+It & operator++();
+It operator++(int);
+bool operator==(It const &);
+bool operator!=(It const &);
+It & operator=(It const &);
+It(It const &); //copy ctor
+\end{lstlisting}
+
+\textbf{Bidirectional Iterator}\\
+Can do whatever the forward iterator can do plus going backwards.
+\begin{lstlisting}[language=C++]
+struct bidirectional_iterator_tag{};
+It & operator--();
+It operator--(int);
+\end{lstlisting}
+
+\textbf{Random Access Iterator} \\
+Can do what the bidiretional iterator can do plus: Directly access element at index (offset to current position): distance can be positive or negative, Go n steps forward or backward, "Subtact" two iterators to get the distance, Compare with relational operators (<, <=, >, >=).
+ Allows also random access in algorithms.
+
+\textbf{Output Iterators} \\
+ Can write value to current element, but only once (\*it = value).  Modeled after std::ostream\_iterator.
+
+\begin{lstlisting}[language=C++]
+struct output_iterator_tag{};
+Element & operator*();
+It & operator++();
+It operator++(int);
+\end{lstlisting}
+
+\subsubsection{Iterator Functions}
+Has two functions std::distance(start, goal); std::advance(itr, n);.
+
+\begin{lstlisting}[language=C++]
+int main() {
+std::vector<int> primes{2, 3, 5, 7, 11, 13};
+auto current = std::begin(primes); auto afterNext = std::next(current); std::cout << "current: " << *current << " afterNext: " << *afterNext << '\n';
+std::advance(current, 1); std::cout << "current: " << *current << " afterNext: " << *afterNext << '\n';
+}
+\end{lstlisting}
