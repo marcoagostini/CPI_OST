@@ -114,6 +114,12 @@ class Date {
 #endif /* DATE_H_ */
 \end{lstlisting}
 
+\subsection{Inline Functions}
+Inline function is a function that is expanded in line when it is called. When the inline function is called whole code of the inline function gets inserted or substituted at the point of inline function call. This substitution is performed by the C++ compiler at compile time. Inline function may increase efficiency if it is small (All the functions defined inside the class are implicitly inline).
+
+\subsection{Friend Functions}
+A friend function can be given a special grant to access private and protected members.
+
 \subsection{Inheritance}
  Base classes are specified after the name: $class <name> : <base1>, ... , <baseN>$. Multiple inheritance is possible and inheritance can specify visibility. If no visibility is specified the default of the inheriting class is used.
 
@@ -138,14 +144,8 @@ class Sub : public Base {
 Custom operators can be overloaded for user-defined types. Declared like a function, with a special name: <returntype> operator op(<parameters>);. 
 Unary operators -> one parameters and binary operators -> two parameters.
 
-\textbf{Free Operator} \\
+\subsection{Free Operator}
 Free operator$<$ uses two parameters of Date each $const$ \& return type $bool$. Is inline when defined in header. The only problem we have is that we don't have access to private members.
-
-\textbf{Inline Keyword} \\
-Inline function is a function that is expanded in line when it is called. When the inline function is called whole code of the inline function gets inserted or substituted at the point of inline function call. This substitution is performed by the C++ compiler at compile time. Inline function may increase efficiency if it is small (All the functions defined inside the class are implicitly inline).
-
-\textbf{Friend keyword} \\
-A friend function can be given a special grant to access private and protected members.
 
 \begin{lstlisting}[language=C++]
 // File Any.cpp
@@ -169,7 +169,7 @@ inline bool operator<(Date const & lhs, Date const & rhs) {
 }
 \end{lstlisting}
 
-\textbf{Member Operator} \\
+\subsection{Member Operator}
 Member operator$<$ uses one parameter of type $Date$, which is $const \&$, return type $bool$ and Right-hand side of operation. Implicit this object: $const$ due to qualifier, left-hand side of operation.
 \begin{lstlisting}[language=C++]
 // File Any.cpp
@@ -190,6 +190,59 @@ class Date {
 	(month == rhs.month && day == rhs.day)));
 	} 
 };
+\end{lstlisting}
+
+\subsection{Greater / smaller than / same Overload}
+\begin{lstlisting}[language=C++]
+// word.h
+class Word {
+private:
+	std::string word;
+
+public:
+	Word() = default;
+	Word(std::string word);
+
+	std::ostream & print(std::ostream & os) const;
+	std::istream & read(std::istream & is);
+
+	bool operator<(Word const & rhs) const;
+};
+
+inline std::ostream & operator<<(std::ostream & os, Word const & word) {
+	return word.print(os);
+}
+
+inline std::istream & operator>>(std::istream & is, Word & word) {
+	return word.read(is);
+}
+
+inline bool operator>(Word const & lhs, Word const & rhs) {
+	return rhs < lhs;
+}
+
+inline bool operator>=(Word const & lhs, Word const & rhs) {
+	return !(lhs < rhs);
+}
+
+inline bool operator<=(Word const & lhs, Word const & rhs) {
+	return !(rhs < lhs);
+}
+
+inline bool operator==(Word const & lhs, Word const & rhs) {
+	return !(lhs < rhs) && !(rhs < lhs);
+}
+
+inline bool operator!=(Word const & lhs, Word const & rhs) {
+	return !(lhs == rhs);
+}
+
+// word.cpp
+bool Word::operator<(Word const & rhs) const {
+	return std::lexicographical_compare(word.begin(), word.end(), rhs.word.begin() ,rhs.word.end(), [](char lhs, char rhs) {
+		return std::tolower(lhs) < std::tolower(rhs);
+	});
+}
 \end{lstlisting}
 
 
