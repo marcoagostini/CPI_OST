@@ -5,16 +5,64 @@
 %You know the correct way to read and print objects
 
 \section{Classes and Operators}
-\subsection{Classes}
- Are usually defined in header files and not in *.cpp files! Does one thing and is well named after that. Consists of member functions with only a few lines. Has a class invariant: provides guarantee about its state (values of the member variables). Constructors establish that invariant. Is easy to use without complicated protocol sequence requirements.
+Are defined in header files and not in *.cpp files! The implementation can then be done in a suitable file.
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Class members are implicitly inline.
+  \item A class does one thing well and is named after that.
+  \item A class consists of member functions with only a few lines.
+  \item Has a class invariant: provides guarantee about its state (values of the member variables).
+  \item Don't make member variables const as it prevents copy assignment. Don't add members to communicate between member function calls.
+  \item Member functions should when possible be const, as long as they don't change the this object
+\end{itemize}
 
-A class is usually defined in a header file. At the end of a class definition a
-semicolon is required. 
+\begin{lstlisting}[language=C++]
+class <GoodClassName> {
+	<member variables>
+	<constructor>
+	<member function>
+};
+\end{lstlisting}
 
-\textbf{Class Head} \\
-Keywords for defining a class: class or struct. Default visibility for members of the class are: private for class and public for struct.
+Class type in a header file.
+\begin{lstlisting}[language=C++]
+#ifndef DATE_H_
+#define DATE_H_
+class Date {
 
-\textbf{Access Specifier}
+	int year, month, day;
+
+public:
+	Date() = default;
+	Date(int year, int month, int day) : year{year}, month{month}, day{day} {/*...*/}
+	static bool isLeapYear(int year) {/*...*/}
+	
+private:
+	bool isValidDate() const {/*...*/} 
+};
+
+#endif /* DATE_H_ */
+\end{lstlisting}
+
+Implementation of the class. 
+\begin{lstlisting}[language=C++]
+#include "Date.h"
+Date::Date(int year, int month, int day) : year{year}, month{month}, day{day} {
+		if (!isValidDate()) {
+			throw std::out_of_range{"invalid date"}; 
+		}
+	}
+	
+Date::Date() : Date{1980, 1, 1} { } // Default constructor
+
+Date::Date(Date const & other) : Date{other.year, other.month, other.day} { } // copy constructor
+
+bool Date::isLeapYear(int year) {
+	/* ... */
+}
+\end{lstlisting}
+
+\subsection{Access Specifier}
 \begin{itemize}
   \itemsep -0.5em 
   \item private: visible only inside the class (and friends); for hidden data members
@@ -22,38 +70,20 @@ Keywords for defining a class: class or struct. Default visibility for members o
   \item public: visible from everywhere; for the interface of the class
 \end{itemize}
 
-\textbf{Member Variables} \\
-Don't make member variables const as it prevents copy assignment. Don't add members to communicate
-between member function calls.
 
 \textbf{Static Member Functions and Variables}\\
 No $static$ in *.cpp file only in *.h file!
 
-\textbf{Constructors} \\
+\subsection{Constructors}
 Function with name of the class and no return type. 
 \begin{itemize}
-    \item Default Constructor -No parameters. Implicitly available if there are no other explicit constructors. Has to initialize member variables with default values.
+    \item Default Constructor - No parameters. Implicitly available if there are no other explicit constructors. Has to initialize member variables with default values.
     \item Copy Constructor - Has one $<$own-type$>$ const \& parameter. Implicitly available (unless there is an explicit move constructor or assignment operator). Copies all member variables.
     \item Move Constructor - Has one $<$own-type$>$ \&\& parameter. Implicitly available (unless there is an explicit copy constructor or assignment operator). Moves all members
     \item Typeconversation Constructor - Has one $<$other-type$>$ const \& parameter. Converts the input type if possible. Declare explicit to avoid unexpected conversions.
     \item Initializer List Constructor - Has one std::initializer\_list parameter. Does not need to be explicit, implicit conversion is usually desired. Initializer List constructors are preferred if a variable is initialized with $\{$ $\}$
     \item Destructor - Named like the default constructor but with a $\sim$. Must release all resources. Implicitly available. Must not throw an exception. Called automatically at the end of the block for local instances.
 \end{itemize}
-
-\begin{lstlisting}[language=C++]
-// File: date.h
-#ifndef DATE_H_ 
-#define DATE_H_
-class Date { // HEAD
-	int year, month, day; // MEMBER VARIABLES
-public:
-	Date(int year, int month, int day) // CONSTRUCTOR
-	: year{year}, month{month}, day{day} {/*...*/} // MEMBER INITIALISER LIST
-	static bool isLeapYear(int year) {/*...*/}
-private:
-	bool isValidDate() const {/*...*/} };
-#endif /* DATE_H_ */
-\end{lstlisting}
 
 \begin{lstlisting}[language=C++]
 class Date {
@@ -68,6 +98,20 @@ public:
     ~Date(); // Destructor
     Date(Date const &) = delete; // delete implicit Copy-Constructor
 };
+\end{lstlisting}
+
+\subsection{Defaulted Constructor}
+In order no to state the default constructor explicitly in the cpp file it can be defined in the header file of the class. This is also possible for the move and the copy constructor.
+\begin{lstlisting}[language=C++]
+#ifndef DATE_H_
+#define DATE_H_
+class Date {
+	int year{9999}, month{12}, day{31};
+	//...
+	Date() = default;
+	Date(int year, int month, int day);
+};
+#endif /* DATE_H_ */
 \end{lstlisting}
 
 \subsection{Inheritance}
@@ -88,12 +132,21 @@ class Sub : public Base {
 };	
 \end{lstlisting}
 
-\subsection{Operator Overloading}
+
+\pagebreak
+\section{Operator Overloading}
 Custom operators can be overloaded for user-defined types. Declared like a function, with a special name: <returntype> operator op(<parameters>);. 
 Unary operators -> one parameters and binary operators -> two parameters.
 
 \textbf{Free Operator} \\
 Free operator$<$ uses two parameters of Date each $const$ \& return type $bool$. Is inline when defined in header. The only problem we have is that we don't have access to private members.
+
+\textbf{Inline Keyword} \\
+Inline function is a function that is expanded in line when it is called. When the inline function is called whole code of the inline function gets inserted or substituted at the point of inline function call. This substitution is performed by the C++ compiler at compile time. Inline function may increase efficiency if it is small (All the functions defined inside the class are implicitly inline).
+
+\textbf{Friend keyword} \\
+A friend function can be given a special grant to access private and protected members.
+
 \begin{lstlisting}[language=C++]
 // File Any.cpp
 #include "Date.h" Any.cpp

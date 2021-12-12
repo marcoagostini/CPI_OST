@@ -6,9 +6,16 @@
 % You can read from and write to streams 
 % You know about the possible states of an std::istream
 
-\section{Values and Streams}
+\section{Variables}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Variables always start with a lower case character
+  \item Local variables must always contain a default value (Curly brackets or =).
+  \item A global variable must never be mutable! (Hard to test and can cause problems when multithreading is used)
+  \item Variables are as default value types and therefore declared on the stack.
+\end{itemize}
 
-\subsection{Variable Definitions}
+\subsection{Definitions}
 Defining a variable consists of specifying its <type>, its <variable-name> and its <initial value>. Empty braces mean default initialisation. Using = for initialisation we can have the compiler determine its type (do not combine with braces!).
 \begin{center}
 $<type> <variable-name> {<initial-value>};$
@@ -43,14 +50,34 @@ Are part of the language and don't need an include.
 \end{itemize}
 
 \subsection{Values and Expressions}
-C++ provides automatic type conversion if values of different types are combined in an expression. Dividing integers by zero is undefined behavior.
+C++ provides automatic type conversion if values of different types are combined into an expression. Dividing integers by zero is undefined behaviour.
 
-\includegraphics[width=0.75\linewidth]{images/literalexamples}
+\begin{figure}[h!]
+	\centering
+  \includegraphics[width=0.75\linewidth]{images/literalexamples}
+  \caption{C++ Variable Types}
+\end{figure}
 
 \begin{lstlisting}[language=C++]
 (5 + 10 * 3 - 6 / 2) // precedence as in normal mathematics = 32
 auto x = 3; / 3 // Fractions results of int operations always rundet down! 1
-auto y = x%2 ? 1 : 0; // int to boolean conversion 0=false, all other are true. = 1
+auto y = x%2 ? 1 : 0; // int boolean conversion 0=false, others are true.=1
+\end{lstlisting}
+
+\subsection{Const}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Const should be used as often as possible, because it optimises the code.
+  \item Const is comparable with the final from Java, although it has a higher guarantee that the variable is not changed.
+  \item Const variables must be initiaized!
+  \item To set const vars at compile time the keyword "constexpr" must be used.
+\end{itemize}
+
+\subsection{Auto}
+The keyword auto can be used to deduct the type of a variable automatically at the declaration.
+\begin{lstlisting}[language=C++]
+auto const yearOfBirth = 2049; // int
+auto const name = "Rick Deckard" // std::string
 \end{lstlisting}
 
 \subsection{Strings}
@@ -74,17 +101,29 @@ void toUpper(std::string & value) {
 	}
 }	
 \end{lstlisting}
+\pagebreak
 
-\subsection{Input and Output Streams}
+
+\section{Streams}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item In the header files the inclusion of \lstinline[language=C++]{#include <iosfwd>} forward declaration header. This is sufficient for function declarations.
+  \item In a source file for "std::cin" and "std::cout" the \lstinline[language=C++]{#include <iostream>} should be used. This containts all the definitions needed for "std::cin" etc. If just one of the two stream objects is need use either \lstinline[language=C++]{#include <ostream>} or \lstinline[language=C++]{#include <istream>}. The last two dont include the "std::cin" and "std::cout".
+  \item In the main function "std::cin" and "std::cout" is used with the corresponding shift operators "<<", ">>".
+  \item "std::istream" objects do return false if we are in an invalid stream state.
+  \item "std::endl" flushes a buffered out stream. Better use "\textbackslash n". 
+\end{itemize}
+
+\subsection{Input and Output Streams} 
 Functions taking a stream object must take it as a reference, because they provide a side-effect to the stream (i.e., output characters).
 
-\textbf{Simple I/O}
-Stream objects provide C++'s I/O mechanism with the help of the pre-defined globals: std::cin std::cout. Should only be used in the main function! Streams have a state that denotes if I/O was successful or not.
+\textbf{Simple I/O} \\
+Stream objects provide C++'s I/O mechanism with the help of the pre-defined globals: std::cin std::cout. Streams have a state that denotes if I/O was successful or not.
 \begin{itemize}
   \itemsep -0.5em 
   \item Only .good() streams actually do I/O
   \item You need to .clear() the state in case of an error
-  \item Reading a std::string can not go wrong, unless the stream is already !good().
+  \item Reading a std::string can not go wrong, unless the stream is already \lstinline[language=C++]{!good()}.
 \end{itemize}
 
 \textbf{Reading a std::strting Value }
@@ -125,19 +164,18 @@ std::string readSymbols(std::istream& in) {
 }
 \end{lstlisting}
 
-\textbf{Stream States}\\
+\subsection{Stream States}
 Formatted input on stream  is must check for is.fail() and is.bad(). If failed, is.clear() the stream and consume invalid input characters before continue.
-\begin{center}
-\includegraphics[width=0.75\linewidth]{images/streamstates}
-\end{center}
 
-\textbf{Headers}\\
-As a general advise the most matching include should be used.
-\begin{itemize}
-  \itemsep -0.5em 
-  \item $iosfwd$ contains only the declarations for std::ostream and std::istream. This is sufficient for function declarations.
-  \item $istream$ and ostream contain the implementation of the corresponding stream, operators.
-  \item $iostream$ contains all of the above and additionally std::cout, std::cin, std::cerr. This is only required in the source file containing the main() function, because only there the global standard IO variables shall be used
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.7\linewidth]{images/streamstates}
+  \caption{Stream States in C++}
+\end{figure}
 
-\end{itemize}
-\break
+\subsection{Manipulators}
+For the formatting of the output a vide variety of manipulator can be used.
+% TODO add some manipulators
+
+
+\pagebreak

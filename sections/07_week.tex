@@ -19,6 +19,53 @@ There are three main types of standard containers in the C++ language. \\ Contai
   \caption{Member Function of a Container}
 \end{figure}
 
+\subsection{Introduction to std::array<T, N> and std::vector<T>}
+\textbf{Array}\\
+C++'s std::array<T, N> is a fixed-size Container.  T is a template type parameter (= placeholder for type). N is a positive integer, template non-type parameter (= placeholder for a value). Elements can be accessed with a subscript operator [] or at(). . The size is bound to the array object and can be queried using .size();. Avoid plain C-Array whenever possible: \lstinline[language=C++]|int arr[]{1, 2, 3, 4, 5};|
+\begin{itemize}
+  \itemsep -0.5em 
+  \item at() throws an exception on invalid index access
+  \item $[]$ has undefined behavior on invalid index access Behavior
+  \item The size of an array must be known at compile-time and cannot be changed. Otherwise it contains N default-constructed elements: std::array<int, 5> emptyArray{};
+\end{itemize}
+\begin{center}
+\includegraphics[width=0.75\linewidth]{images/array}
+\end{center}
+
+\textbf{Vector}\\
+C++'s std::vector<T> is a Container = contains its elements of type T (no need to allocate them). java.util.ArrayList<T> is a collection = keeps references to T objects (must be “new”ed).  T is a template type parameter (= placeholder for type). std::vector can be initialized with a list of elements. Otherwise it is empty: std::vector<double> vd{};.
+\begin{center}
+\includegraphics[width=0.75\linewidth]{images/vector}
+\end{center}
+\textbf{Append Elements to an std::vector<T>}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item $v.push\_back(<value>);$
+  \item $v.insert (<iterator-position>, <value>);$
+\end{itemize}
+
+\textbf{Filling a Vector with Values}
+\begin{lstlisting}[language=C++]
+std::vecor<int> v{};
+v.resize(10);
+std::fill(std::begin(v), std::end(v), 2);
+
+std::vector<int> v(10); 
+std::fill(std::begin(v), std::end(v), 2);
+
+std::vector v(10, 2);
+
+// Filling increased values with iota
+std::vector<int> v(100); std:iota(std::begin(v), std::end(v), 1);
+\end{lstlisting}
+
+\textbf{Finding and counting elements of a vector} \\
+ std::find() and std::find\_if() return an iterator to the first element that matches the value or condition.
+\begin{lstlisting}[language=C++]
+auto zero_it = std::find(std::begin(v), std::end(v), 0); if (zero_it == std::end(v)) {
+std::cout << "no zero found \n"; }
+\end{lstlisting}
+
 \subsection{Common Container Constructors}
 
 \begin{lstlisting}[language=C++]

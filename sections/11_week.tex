@@ -1,0 +1,69 @@
+\section{Heap Memory Management}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Stack memory is scarce
+  \item It might be needed for creating object structures.
+  \item Also needed for polymorphic factory functions to class hierarchies.
+  \item Dont do it yourself! Always rely on library classes for managing the heap.
+  \item Resource Acquisition Initialization (RAII) Idiom
+	\SubItem{Allocation in the constructor}
+	\SubItem{Deallocation in the desctructor}
+	\SubItem{Use RAII wrapper as value in local scope}
+	\SubItem{Destructor will be called when the scoped is exited(\}, return or exception).}
+\end{itemize}
+
+\subsection{Smart Pointers}
+In the modern C++ world we can use smart pointers, which are C++ templates, to make memory management easier. With these smart pointers we dont have to call "delete ptr;" by ourselfs. Still: always prefer storing the value locally as value-type variable (Stack-based or member).
+
+\subsubsection{std::unique\_ptr<T>}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item defined in "<memory>"
+  \item Used for unshared heap memory
+  	\SubItem{Or for local stuff that must be on the heap}
+  	\SubItem{Can be returned from a factory function}
+  \item Only a single owner exists
+  \item It can wrap to-be-freed pointers from C functions when interfacing legacy code.
+  \item Not the best for class hierarchies
+  \item Can not be copied
+\end{itemize}
+
+% TODO: when to use a std unique pointer?
+
+\subsubsection{std::shared\_ptr<T>}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Works more like a java reference and allows multiple owners.
+  \item The pinter is "std::shared\_ptr" and associates objects of Type T using "Std::makeshared<T>(..).
+\end{itemize}
+
+\begin{lstlisting}[language=C++]
+struct Article { Article(std::string title, std::string content);
+	//..
+};
+Article cppExam{"How to pass CPl?", "In order to pass the C++ exam, you have to..."};
+std::shared_ptr<Article> abcPtr = std::make_shared<Article>("Alphabet", "ABCDEFGHIJKLMNOPQRSTUVXYZ");
+\end{lstlisting}
+
+\textbf{What is it for?}
+\begin{itemize}
+  \itemsep 0em 
+  \item If you really need heap-allocated objects, because you create your own object networks you can use std::shared\_ptr<T> 
+  \item  If you need to support run-time polymorphic container contents or class members that can not be passed as reference, e.g., because of lifetime issues 
+  \item Factory functions returning std::shared\_ptr for heap allocated objects.
+  \item  But first check if alternatives are viable:
+	\SubItem{(const) references as parameter types or class members}
+	\SubItem{Plain member objects or containers with plain class instances}
+\end{itemize}
+
+%TODO Example usage
+The usage is counted on the referenced object to keep track of how many reference currently point to this object on the heap.
+
+\subsubsection{std::weak\_ptr<T>}
+%TODO define the basics of the weak pointer
+
+
+
+
+
+

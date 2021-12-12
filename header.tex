@@ -4,19 +4,24 @@
 
 \usepackage{geometry} 
 \usepackage{graphicx}
-\usepackage[english, german]{babel}
+\usepackage[english]{babel}
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{subfiles}
 \usepackage{enumitem}
 \usepackage{hyperref}
+\usepackage{fancyhdr}
 
 % compact items
 \setlength{\parindent}{0cm}
 \setlength{\parskip}{1ex}
 
 \graphicspath{ {images/} }
-\geometry{top=2cm,left=2cm,right=2cm,bottom=2cm} 
+\geometry{top=2.5cm,left=2cm,right=2cm,bottom=2cm} 
+
+\pagestyle{fancy}
+\rhead{ C++ }
+\lhead{ \leftmark  }
 
 \definecolor{codegreen}{rgb}{0,0.6,0}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
@@ -24,25 +29,29 @@
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
 \lstdefinestyle{c++}{
-    backgroundcolor=\color{backcolour},   
+    backgroundcolor=\color{white},   
     commentstyle=\color{codegreen},
-    keywordstyle=\color{magenta},
-    numberstyle=\tiny\color{codegray},
-    stringstyle=\color{codepurple},
+    keywordstyle=\color{codepurple},
+    identifierstyle =\color{black},
+    numberstyle=\small\color{codegray},
+    stringstyle=\color{green},
     basicstyle=\ttfamily,
-    breakatwhitespace=false,         
+    breakatwhitespace=false,    
+    frame=tb,     
     breaklines=true,                 
-    captionpos=b,                    
+    captionpos=b,                   
     keepspaces=true,                 
     numbers=left,                    
     numbersep=5pt,                  
     showspaces=false,                
     showstringspaces=false,
     showtabs=false,                  
-    tabsize=2
+    tabsize=2,
+    morekeywords={ virtual,
+    }
 }
 
-\lstset{style=c++}
+\lstset{style=C++}
 
 \newcommand{\SubItem}[1]{
 	{\setlength\itemindent{15pt} \item[-] #1}

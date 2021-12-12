@@ -4,56 +4,8 @@
 % You can access and modify container contents using algorithms
 % You can interact with streams through iterators
 
-\section{Sequences and Iterators}
-\subsection{Introduction to std::array<T, N> and std::vector<T>}
-\textbf{Array}\\
-C++'s std::array<T, N> is a fixed-size Container.  T is a template type parameter (= placeholder for type). N is a positive integer, template non-type parameter (= placeholder for a value). Elements can be accessed with a subscript operator [] or at(). . The size is bound to the array object and can be queried using .size();. Avoid plain C-Array whenever possible: int arr[]{1, 2, 3, 4, 5};
-\begin{itemize}
-  \itemsep -0.5em 
-  \item at() throws an exception on invalid index access
-  \item $[]$ has undefined behavior on invalid index access Behavior
-  \item The size of an array must be known at compile-time and cannot be changed. Otherwise it contains N default-constructed elements: std::array<int, 5> emptyArray{};
-\end{itemize}
-\begin{center}
-\includegraphics[width=0.75\linewidth]{images/array}
-\end{center}
-
-\textbf{Vector}\\
-C++'s std::vector<T> is a Container = contains its elements of type T (no need to allocate them). java.util.ArrayList<T> is a collection = keeps references to T objects (must be “new”ed).  T is a template type parameter (= placeholder for type). std::vector can be initialized with a list of elements. Otherwise it is empty: std::vector<double> vd{};.
-\begin{center}
-\includegraphics[width=0.75\linewidth]{images/vector}
-\end{center}
-\textbf{Append Elements to an std::vector<T>}
-\begin{itemize}
-  \itemsep -0.5em 
-  \item $v.push\_back(<value>);$
-  \item $v.insert (<iterator-position>, <value>);$
-\end{itemize}
-
-\textbf{Filling a Vector with Values}
-\begin{lstlisting}[language=C++]
-std::vecor<int> v{};
-v.resize(10);
-std::fill(std::begin(v), std::end(v), 2);
-
-std::vector<int> v(10); 
-std::fill(std::begin(v), std::end(v), 2);
-
-std::vector v(10, 2);
-
-// Filling increased values with iota
-std::vector<int> v(100); std:iota(std::begin(v), std::end(v), 1);
-\end{lstlisting}
-
-\textbf{Finding and counting elements of a vector} \\
- std::find() and std::find\_if() return an iterator to the first element that matches the value or condition.
-\begin{lstlisting}[language=C++]
-auto zero_it = std::find(std::begin(v), std::end(v), 0); if (zero_it == std::end(v)) {
-std::cout << "no zero found \n"; }
-	
-\end{lstlisting}
-
-
+\section{Iterators}
+There are always two iterators used (begin() und end()). There is also the possibility to traverse a list from front to back (rbegin() and rend()). If the members are only read the const version (cbegin() and cend()) can be used.
 
 \subsection{Iteration}
 Its possible to index a vector like an array but there is no bounds check.    Accessing an element outside the valid range is Undefined Behavior.
@@ -65,7 +17,7 @@ for (size_t i = 0; i < v.size(); ++i) {  //Index is "unsigned" 0-1=MAX_INT
 }	
 \end{lstlisting}
 
-\textbf{Elemt Iteration (Range-Based for)}
+\textbf{Element Iteration (Range-Based for)}
 \begin{itemize}
   \itemsep -0.5em 
   \item Advantage: No index error possible 
@@ -136,16 +88,62 @@ void printAll(std::vector<int> v, std::ostream & out) {
 Iterators connect streams and algorithms.  Streams (std::istream and std::ostream) cannot be used with algorithms directly.
 \begin{itemize}
 	\itemsep -0.5em 
-  	\item $std::ostream\_iterator<T>$ outputs values of type T to the given std::ostream
+  	\item \lstinline{std::ostream_iterator<T>} outputs values of type T to the given std::ostream
   	\begin{itemize}
   		\item No end() marker needed for output, it ends when the input range ends.
   	\end{itemize}
   	
-  	\item  $std::istream_iterator<T>$ reads values of type T from the given std::istream
+  	\item  \lstlinline|std::istream_iterator<T>| reads values of type T from the given std::istream
 	\begin{itemize}
-  		\item End iterator is the default constructed $std::istream_iterator<T>{}$
+  		\item End iterator is the default constructed \lstinline|std::istream_iterator<T>{}|
    		\item It ends when the stream is no longer good().
    	\end{itemize}
 \end{itemize}
+
+\subsection{Types}
+There are five different types of iterators in C++.
+\begin{lstlisting}[language=C++]
+struct input_iterator_tag { };
+struct output_iterator_tag { };
+struct forward_iterator_tag : public inputer_iterator_tag { };
+struct bidirectional_iterator_tag : public forward_iterator_tag { };
+struct random_access_iterator_tag : public bidirectional_iterator_tag { };
+\end{lstlisting}
+
+\subsubsection{Input Iterator}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item The element can be read only once and after that the iterator has to be incremeneted.
+  \item Used for \lstinline[language=C++]|std::istream_iterator| and \lstinline[language=C++]|std::istreambuf_iterator|
+\end{itemize}
+
+\subsubsection{Forward Iterator}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Element can be read in and changed (Except element or container is const).
+  \item Only allows forward iteration
+  \item Sequenz can be iterated over multiple times
+\end{itemize}
+
+\subsubsection{Bidirectional Iterator}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Element can be read in and changed (Except element or container is const).
+  \item Allows forward and backwards iteration
+  \item Sequenz can be iterated over multiple times
+  \item The random access iterator behaves as the bidirectional iterator with the addition that the can access elements over the index
+\end{itemize}
+
+\subsubsection{Output Iterator}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Current element can be changed once, after that the iterator has to be incremented.
+  \item There is no end for this iterator (example console prints)
+  \item Used for \lstinline|std::ostream_iterator|
+  \item Writes the result without knowing the result.
+\end{itemize}
+
+
+
 
 \break
