@@ -1,4 +1,4 @@
-\section{Heap Memory Management}
+\section{Dynamic Heap Memory Management}
 \begin{itemize}
   \itemsep -0.5em 
   \item Stack memory is scarce
@@ -14,6 +14,15 @@
 
 \subsection{Smart Pointers}
 In the modern C++ world we can use smart pointers, which are C++ templates, to make memory management easier. With these smart pointers we dont have to call "delete ptr;" by ourselfs. Still: always prefer storing the value locally as value-type variable (Stack-based or member).
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Delete Pointer - must never be called.
+  \item Unique Pointer - for unshared Heap Memory (cant be copied).
+  \item Shared Pointer - for shared Heap Memory (work as Java references, can be copied and moved).
+  \item If the last "shared\_ptr" handle gets destroyed, the allocated object gets deleted.
+  \item Shared Pointer have the problem of cycles. For this reason there is a "weak\_ptr" to break the cycles.
+\end{itemize}
+
 
 \subsubsection{std::unique\_ptr<T>}
 \begin{itemize}
