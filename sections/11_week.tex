@@ -44,7 +44,13 @@ In the modern C++ world we can use smart pointers, which are C++ templates, to m
   \item Can not be copied
 \end{itemize}
 
-% TODO: when to use a std unique pointer?
+\textbf{Use Cases}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item As member variable
+  \item As local variable
+\end{itemize}
+
 
 \subsubsection{std::shared\_ptr<T>}
 \begin{itemize}
@@ -61,10 +67,10 @@ Article cppExam{"How to pass CPl?", "In order to pass the C++ exam, you have to.
 std::shared_ptr<Article> abcPtr = std::make_shared<Article>("Alphabet", "ABCDEFGHIJKLMNOPQRSTUVXYZ");
 \end{lstlisting}
 
-\textbf{What is it for?}
+\textbf{Use Cases}
 \begin{itemize}
   \itemsep 0em 
-  \item If you really need heap-allocated objects, because you create your own object networks you can use std::shared\_ptr<T> 
+  \item If you really need heap-allocated objects, because you create your own object networks
   \item  If you need to support run-time polymorphic container contents or class members that can not be passed as reference, e.g., because of lifetime issues 
   \item Factory functions returning std::shared\_ptr for heap allocated objects.
   \item  But first check if alternatives are viable:
@@ -76,10 +82,16 @@ std::shared_ptr<Article> abcPtr = std::make_shared<Article>("Alphabet", "ABCDEFG
 The usage is counted on the referenced object to keep track of how many reference currently point to this object on the heap.
 
 \subsubsection{std::weak\_ptr<T>}
-%TODO define the basics of the weak pointer
+\begin{itemize}
+  \itemsep -0.5em 
+  \item The "shared\_ptr" cycles need to be broken
+  \item "weak\_ptr" does not allow direct access to the object
+  \item A "weak\_ptr" does not know weather the pointee is still alive
+  \item with "lock()" to the object can be acquired if alive. 
+\end{itemize}
 
-
-
-
-
-
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\linewidth]{weakptr}
+  \caption{}
+\end{figure}
