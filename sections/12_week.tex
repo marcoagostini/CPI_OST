@@ -148,5 +148,36 @@ struct abstractBase {
 }
 \end{lstlisting}
 
+\subsection{Destructors}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Classes with virtual members require a virtual Destructor
+  \item Otherwise when allocated on the heap with make\_unique and assigned to a unique\_ptr only the destructor of Base is called
+\end{itemize}
+
+\begin{lstlisting}[language=C++]
+struct Fuel {
+  virtual void burn() = 0;
+  virtual ~Fuel() { std::cout << "put into trash\n" }
+};
+
+struct Plutonium : Fuel {
+  void burn() { std::cout << "split core\n"; }
+  ~Plutonium() { std::cout << "store many years\n"; }
+};
+
+int main() {
+  std::unique_ptr<Fuel> surprise = std::make_unique<Plutonium>(); // both called
+}
+\end{lstlisting}
+
+\subsection{Object Slicing}
+The object slicing problem can be solved if we set the copy operations as delted.
+\begin{lstlisting}[language=C++]
+struct Base {
+	Base & operator=(Base const & other) = deleted;
+	Book(Book const & other) = deleted;
+}
+\end{lstlisting}
 
 
