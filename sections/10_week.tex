@@ -11,34 +11,22 @@
   \itemsep 0em 
   \item In addition to functions also class types can habe template parameters
   \item Since C++17, similar to function templates, the compiler might deduce the template arguments
+  \item Class templates deliver types with compile time parameters
+  \item Member function which never are used are also never compiled
   \item Compile-time polymorphism
   \item Class templates can be specialized
 \end{itemize}
 
-\textbf{Rules} \\
+\textbf{Rules}
 \begin{itemize}
   \itemsep 0em 
-  \item Define class templates completely in header files
+  \item Define class templates completely in header files!
   \item Member functions of class templates
   	\SubItem{Either in class template directly}
   	\SubItem{Or as inline function templates in the same header file}
   \item When using language elements depending directly or indirectly on a template parameter, you must specify typename when it is naming a type.
   \item static member variables of a template class can be defined in header without violating ODR, even if included in several compilation units.
- 
 \end{itemize}
-
-
-\begin{minipage}{0,5\linewidth}
-  \begin{lstlisting}[language=C++]
-  std::vector<int> oldValues{1, 2, 3};
-  \end{lstlisting}
-\end{minipage}
-\begin{minipage}{0,5\linewidth}
-  \begin{lstlisting}[language=C++]
-  std::vector newValues{1, 2, 3};
-  std::vector<int> emptyValues{};
-  \end{lstlisting}
-\end{minipage}
 
 \begin{lstlisting}
 template <TemplateParameters>
@@ -48,12 +36,27 @@ template <typename T>
 class Stack { /*...*/ };
 \end{lstlisting}
 
+\subsection{Template Argument Deduction (C++17)}
+Similar to function templates, the compiler might deduce the template arguments. This is a compile-time polmorphism.
+\begin{lstlisting}[language=C++]
+std::vector newValues{1, 2, 3}; // The compiler can deduce the type 
+std::vector<int> emptyValues{}; 
+\end{lstlisting}
+
+\subsection{Type Alias \& Dependent Names}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item It is common for template definitions to define type aliases in order to ease their use.
+  \item Within the template definition you might use names that are directly or indirectly depending on the template parameter.
+  \item Dependent Name: Compiler geht standardmässig davon aus, dass es sich im eine Variable, oder eine Funktion handelt. Wenn es ein Typ ist (wie size\_type), muss das keyword typename verwendet werden.
+\end{itemize}
+
 Example
 \begin{lstlisting}[language=C++]
-template <typename T>
+template <typename T> // Class template with one typename par
 class Sack {
 	using SackType = std::vector<T>;
-	using size_type = typename SackType::size_type;
+	using size_type = typename SackType::size_type; // dependent name
 	SackType theSack{};
 	
 public:
@@ -66,13 +69,13 @@ public:
 	void putInto(T const & item) {
 		theSack.push_back(item);
 	}
-	T getOut();
+	T getOut(); // member forward declaration
 };
 \end{lstlisting}
-Deffinieren einer FUnktion ausserhalb der Klassendefinition
+Define the function outside of the template class definition.
 \begin{lstlisting}[language=C++]
 template <typename T> 
-inline T Sack<T>::getOut() {
+inline T Sack<T>::getOut() { // implementation outside of class
 	if (empty()) {
 		throw std::logic_error{"Empty Sack"}; 
 	} 
@@ -83,18 +86,7 @@ inline T Sack<T>::getOut() {
 }
 \end{lstlisting}
 
-\subsection{Type Aliases (C++11)}
-It is common for template definitions to define type aliases in order to ease their use. This has the advantage of less typing and reading als also a single point to change the aliased type. Before used typedef.
-
-\begin{lstlisting}
-using StackType = std::vector<T>;
-\end{lstlisting}
-
-%TODO dependent names
-%TODO Inheritance
-
-
-
-
+\subsection{Inheritance}
+Rule: Always use this->variable (or className::) to refer to inherited members in a template class.
 
 \pagebreak

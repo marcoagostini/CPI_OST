@@ -1,18 +1,26 @@
 \section{Dynamic Heap Memory Management}
+Dont do this yourself! Always rely on library classes for managing it.
+
+\subsection{When ist Heap Memory used?}
 \begin{itemize}
   \itemsep -0.5em 
   \item Stack memory is scarce
   \item It might be needed for creating object structures.
   \item Also needed for polymorphic factory functions to class hierarchies.
-  \item Dont do it yourself! Always rely on library classes for managing the heap.
   \item Resource Acquisition Initialization (RAII) Idiom
-	\SubItem{Allocation in the constructor}
-	\SubItem{Deallocation in the desctructor}
-	\SubItem{Use RAII wrapper as value in local scope}
-	\SubItem{Destructor will be called when the scoped is exited(\}, return or exception).}
 \end{itemize}
 
-\subsection{Smart Pointers}
+\subsection{Legacy Heap Memory}
+\textbf{Dont use this!}\\
+C++ allows allocating objects on the heap directly. If done manually, you are responsible for deallocation and risk undefined behaviour.
+\begin{lstlisting}[language=C++]
+// dont use new / delete
+auto pr = new int{};
+std::cout << *ptr << '\n';
+delete ptr;
+\end{lstlisting}
+
+\subsection{Modern Heap Management}
 In the modern C++ world we can use smart pointers, which are C++ templates, to make memory management easier. With these smart pointers we dont have to call "delete ptr;" by ourselfs. Still: always prefer storing the value locally as value-type variable (Stack-based or member).
 \begin{itemize}
   \itemsep -0.5em 
@@ -32,7 +40,6 @@ In the modern C++ world we can use smart pointers, which are C++ templates, to m
   	\SubItem{Or for local stuff that must be on the heap}
   	\SubItem{Can be returned from a factory function}
   \item Only a single owner exists
-  \item It can wrap to-be-freed pointers from C functions when interfacing legacy code.
   \item Not the best for class hierarchies
   \item Can not be copied
 \end{itemize}

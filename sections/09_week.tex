@@ -4,10 +4,18 @@
 % You can implement variadic generic functions
 % You can describe the type concepts required by a function template
 
-\section{Function Templates} 
-Can be compared as a Generic in Java. The keyword "template" is used to declare a template. The template parameter list contains one or more templates parameters.
-The compiler resolves the function template and figures out the template arguments. C++ uses duck-typing. So every type can be used as argument as long as it supports the used operations.
+\section{Function Templates}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Can be compared as a Generic in Java. The keyword "template" is used to declare a template.
+  \item The template parameter list contains one or more templates parameters.
+  \item C++ uses duck-typing. So every type can be used as argument as long as it supports the used operations.
+  \item Function templates are normally defined and implemented in a header file.
+  \item Tempalate functions are implicitly inline
+  \item We can write generics with templates.
+\end{itemize}
 
+The compiler resolves the function template and figures out the template arguments. 
 \begin{lstlisting}[language=C++]
 template <Template-Parameter-List>
 FunctionDefinition
@@ -20,7 +28,7 @@ T min(T left, T right) {
 	return left < right ? left : right;
 }
 // file smaller.cpp
-#include "min.h" smaller.cpp
+#include "min.h"
 #include <iostream>
 int main() {
 	int first;
@@ -31,21 +39,41 @@ int main() {
 }
 \end{lstlisting}
 
-\textbf{Template Definition}
-\begin{itemize}
-  \itemsep -0.5em 
-  \item Templates are usually defined in a header file
-  	\SubItem{A compiler needs to see the whole template definition to create an instance}
-  	\SubItem{Function template definitions are implicitly inline}
-  \item The definition in a source file is possible, but then it can only be used in that translation unit.
-  \item Type checking happens twice
-  	\SubItem{When the template is defined: only basic checks are performed: syntax and resolution of names that are independent of the template parameters.}
-  	\SubItem{When the template is instantiated (used): The compiler checks whether the template arguments can be used as required by the template.}
-\end{itemize}
-
 \textbf{Template Argument Deduction}
 
+
 \subsection{Variadic Templates}
-% TODO Write definition
+\begin{itemize}
+  \itemsep -0.5em 
+  \item For function templates with an arbitrary number of parameters
+  \item Needs at least one pack parameter
+  \item Pack Expansion: For each argument in that pack an instance of the pattern is created
+  \item In an instance of the pattern the parameter pack name is replaced by an argument of the pack
+  \item Needs a base case for the recursion (after the last parameter is done, it would call the function without a parameter, which is invalid) $\rightarrow$ Base case must be written before the template function.
+\end{itemize}
+\begin{lstlisting}[language=C++]
+#include <iostream>
+#include <string>
+
+// Base Case 
+void printAll(std::ostream & out) {
+}
+
+template<typename First, typename...Types>
+void printAll(std::ostream & out, First const & first, Types const &...rest) {
+  out << first;
+  if (sizeof...(Types)) {
+    out << ", ";
+  }
+  printAll(out, rest...);
+}
+
+int main() {
+	int i{42}; double d{1.25}; std::string book{"Lucid C++"};
+	printAll(std::cout, i, d, book);
+}
+
+\end{lstlisting}
+
 
 \pagebreak
