@@ -47,7 +47,7 @@ for (auto it = std::cbegin(v); it != std::cend(v); ++it) {
 size_t count_blanks(std::string s) {
  	size_t count{0};
  	for (size_t = 0; i < s.size(); ++i) {
- 		if (s[i] == ' ') {
+ 		if (s[i] == " ") {
  			++count;
  		}
  	}
@@ -56,7 +56,7 @@ size_t count_blanks(std::string s) {
  
 // Counting blanks in a string with algorithms
 size_t count_blanks(std::string s) {
-	return std::count(s.begin(), s.end(), ' ');
+	return std::count(s.begin(), s.end(), " ");
 }
 
 // Summing up all values in a vector
@@ -86,27 +86,24 @@ void printAll(std::vector<int> v, std::ostream & out) {
 
 \subsection{Iterators for I/O}
 Iterators connect streams and algorithms.  Streams (std::istream and std::ostream) cannot be used with algorithms directly.
+
 \begin{itemize}
 	\itemsep -0.5em 
   	\item \lstinline{std::ostream_iterator<T>} outputs values of type T to the given std::ostream
-  	\begin{itemize}
-  		\item No end() marker needed for output, it ends when the input range ends.
-  	\end{itemize}
-  	
-  	\item  \lstlinline|std::istream_iterator<T>| reads values of type T from the given std::istream
-	\begin{itemize}
-  		\item End iterator is the default constructed \lstinline|std::istream_iterator<T>{}|
-   		\item It ends when the stream is no longer good().
-   	\end{itemize}
+  	\item No end() marker needed for output, it ends when the input range ends.
+  	\item \lstinline|std::istream_iterator<T>| reads values of type T from the given \lstinline|std::istream|
+  	\item End iterator is the default constructed \lstinline|std::istream_iterator<T>|
+   	\item It ends when the stream is no longer good().
 \end{itemize}
 
 \subsection{Types}
 There are five different types of iterators in C++.
+
 \begin{lstlisting}[language=C++]
 struct input_iterator_tag { };
 struct output_iterator_tag { };
 struct forward_iterator_tag : public inputer_iterator_tag { };
-struct bidirectional_iterator_tag : public forward_iterator_tag { };
+struct bidirectional_iterator_tag : public forward_iterator_tag {};
 struct random_access_iterator_tag : public bidirectional_iterator_tag { };
 \end{lstlisting}
 

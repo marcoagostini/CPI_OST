@@ -52,12 +52,13 @@ In the modern C++ world we can use smart pointers, which are C++ templates, to m
 \end{itemize}
 
 
-\subsubsection{std::shared\_ptr<T>}
-\begin{itemize}
-  \itemsep -0.5em 
-  \item Works more like a java reference and allows multiple owners.
-  \item The pinter is "std::shared\_ptr" and associates objects of Type T using "Std::makeshared<T>(..).
+\subsubsection{Shared Pointer}
+\begin{itemize}
+	\itemsep -0.5em
+	\item Works more like a Java reference and allows multiple owners.
+	\item The pointer is \lstinline|std::shared_ptr| and associates objects of Type T using \lstinline|std::makeshared<T>()|.
 \end{itemize}
+
 
 \begin{lstlisting}[language=C++]
 struct Article { Article(std::string title, std::string content);

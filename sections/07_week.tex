@@ -202,8 +202,8 @@ std::map<char, size_t> vowels
 ++vowels['a'];
 
 // Beim Iterieren ist jedes Element ein pair<char, size>
-for(auto const &p:vowels) {
-	std::cout << p.first << " = "<< p.second << ’\n’;
+for(auto const & p:vowels) {
+	std::cout << p.first << " = "<< p.second << "\n";
 }
 \end{lstlisting}
 

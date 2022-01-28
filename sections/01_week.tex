@@ -74,7 +74,7 @@ C++ has the advantage of direct compilation into machine code. This eliminates t
 
 \textbf{Defining Functions}
 \begin{center}
-$<return-type> <function-name> (<parameters>) \{ /* body */ \}$
+	$<return-type> <function-name> (<parameters>) \{ /* body */ \}$
 \end{center}
  Tells the compiler that there is a function named $<function-name>$ that takes the parameters $<parameters>$ and returns a value of type $<return-type>$. The Signature of a function is just the combination of name and the parameter types. 
  
@@ -83,7 +83,7 @@ $<return-type> <function-name> (<parameters>) \{ /* body */ \}$
  
 \textbf{Include Guard}\\
 Include guards ensure that a header file is only included once. Multiple inclusions could violate the One Definition Rule when the header contains definitions.
-\begin{lstlisting}[language=c++]
+\begin{lstlisting}[language=C++]]
 #ifndef SAYHELLO_H_
 #define SAYHELLO_H_
 #include <iosfwd>
