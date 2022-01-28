@@ -4,7 +4,7 @@
 
 \usepackage{geometry} 
 \usepackage{graphicx}
-\usepackage[german]{babel}
+\usepackage[english]{babel}
 \usepackage{listings}
 \usepackage{xcolor}
 \usepackage{subfiles}
@@ -24,7 +24,11 @@
 
 \pagestyle{fancy}
 \fancyhead[RO]{C++}
-\fancyhead[LO]{\nouppercase\leftmark}
+
+
+\titlespacing\section{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing\subsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
+\titlespacing\subsubsection{0pt}{12pt plus 4pt minus 2pt}{0pt plus 2pt minus 2pt}
 
 \newcommand{\sectionbreak}{\clearpage}
 \setcounter{tocdepth}{5}
@@ -34,7 +38,8 @@
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 
-\lstdefinestyle{c++}{
+\lstdefinestyle{cpp}{
+	language=c++,
     backgroundcolor=\color{white},   
     commentstyle=\color{codegreen},
     keywordstyle=\color{codepurple},
@@ -57,7 +62,7 @@
     }
 }
 
-\lstset{style=C++}
+\lstset{style=cpp}
 
 \newcommand{\SubItem}[1]{
 	{\setlength\itemindent{15pt} \item[-] #1}

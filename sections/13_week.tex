@@ -1,6 +1,163 @@
+% you can recognize and name differnet kinds of initialization
+% you can explain the constraints imposed on aggregate types
+% you can implement an aggregate class
+
 \section{Initialisation}
 
+\begin{itemize}
+	\itemsep -0.5em
+	\item Default Initialization
+	\item Value Initializtaiton
+	\item Direct Initialization
+	\item Copy Initialization
+	\item List Initialization
+	\item Aggregate Initialization
+\end{itemize}
+
+\subsection{Default Initialization}
+Is the simplest type of initialization. We simply don't provide an initializer. This depends on the kind of entity we want to declare. This does not work for references! Also does not rally work with a const object. 
+
+\begin{lstlisting}[language=C++]
+int global_variable; // implicitly static
+void di_function() {
+	static long local_static; // Default I 
+	long local_variable; // Default I
+}
+struct di_class {
+	di_class() = default; // Default Initializer
+	char member_variable; // not in ctor init list 
+};
+\end{lstlisting}
+
+\paragraph{Effects}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Static Variables are Zero initialized first, then their types default constructor is called.
+  \item Non static integer and floating point variable are unitialized!
+  \item Object of class types are constructed using their default constructor.
+  \SubItem{Member Variables not in a ctor-init-list are default initialized} 
+  \item Arrays initialized all of their elements accordingly
+\end{itemize}
+
+\begin{lstlisting}
+struct blob {
+	blob(int); // suppreses default constructor
+};
+blob static_instance; // error no matching function blob::blob();!
+\end{lstlisting}
+
+\begin{lstlisting}
+void di_function() {
+	long local_variable; // no initialization
+	std::string local_text; // gets default constructed, string default constructor
+}
+struct di_class {
+	di_class() = default;
+	char member_variable; // default initiliazed, since value type the content is rubbish
+};
+\end{lstlisting}
+
+\subsection{Value Initialization}
+Value Initialization is perfomed with empty \lstinline|(), {}| but currly bracets are prefered, since it works with more classes. Invokes the default constructor for class types.
+
+\begin{lstlisting}
+#include <string> #include <vector>
+void vi_function() {
+	int number { };
+	std::vector<int> data { };
+	std::string actually_a_function(); // Is a function and not a variable!!
+}
+\end{lstlisting}
+
+\subsection{Direct Initialization}
+Nearly the same as Value initialization but we directly define the value. Using \lstinline|{}| only applies to non class types.
+
+\begin{lstlisting}
+#include <string>
+void diri_function() {
+	int number{32}; // DI
+	std::string text("CPL"); // DI
+	word vexing (std::string()); // Most Vexing Parse
+}
+\end{lstlisting}
+
+\paragraph{Most Vexing Parse}
+There are two interpretations of this expression: Initialization with a value-initialiized string, Decleration of a function returnin g a word and taking an unnamed pointer to a function returning a string.
 
 
+\subsection{Copy Initialization}
+Initialization using \lstinline|=|. \\
+Pseudocode for behavior of copy initialization.
+\begin{lstlisting}
+if(object has type class, rhs has the same type)
+	if(rhs is temporary) object is constructed in place
+	else( copy constructor is invoked )
+else(Suitable conversion sequence is searched for)
+\end{lstlisting}
 
-\section{Aggergate}
+\begin{lstlisting}
+#include <string>
+std::string string_factory() { return ""; }
+
+void ci_function() {
+	std::string in_place = string_factory(); // object in place
+	std::string copy = in_place; // copy constructor
+	std::string converted = "CPl"; // converted
+}
+\end{lstlisting}
+
+\subsection{List Initialization}
+Uses the non empty \lstinline|{}|. If there is a suitable constructor takin \lstinline|std::initializer_list| is selected. Otherwise a suitable constructor is searched.
+\begin{lstlisting}
+// Direct List Initialization
+std::string direct { "CPI" };
+// Copy List Initialization
+std:: string copy = { "CPIA" };
+\end{lstlisting}
+
+\paragraph{Pittfall}
+Since the \lstinline|std::itializer_list| constructor is preferred, you might run into trouble.
+\begin{lstlisting}
+int ouch() {
+	std::vector<int> data {10, 42}; // creates with initializer list.
+	return data[5]; // out of bound!
+}
+\end{lstlisting}
+
+\section{Aggregates}
+Is a simple class type. 
+\begin{itemize}
+	\itemsep -0.5em
+	\item Can have other types as public class types
+	\item Can have member variables and functions
+	\item Must not have user-provided, inherited or explicit constructors
+	\item must not have protected or private direct members
+\end{itemize}
+
+\begin{lstlisting}
+struct person {
+	std::string name;
+	int age{42};
+
+	bool operator<(person const & other) const {
+		return age < other.age;
+	}
+
+	void write(std::ostream & out) const {
+		out << name << ": " << age << "\n"; 
+	}
+};
+
+int main() {
+	person rudolf{"Rudolf", 32};
+	rudolf.write(std::cout); 
+}
+\end{lstlisting}
+
+\subsection{Aggregate Initialization}
+Conecptional a special case of the list initialization. If the type is an aggregate, the members and base classes are initialized from the initializers in the list. 
+
+\begin{lstlisting}
+person rudolf{"Rudolf"};
+\end{lstlisting}
+
