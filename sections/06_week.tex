@@ -29,6 +29,22 @@ enum class day_of_week {
 };
 \end{lstlisting}
 
+\subsection{Arithmetic Types}
+Disclaimer: You usually do not want to implement your own arithmetic types! Examples: Rings, Finite Fields.
+
+\begin{lstlisting}
+struct Ring5 {
+	explicit Ring5(unsigned x = 0u)
+		: val{x % 5}{} 
+	unsigned value() const {
+		return val; 
+	}
+private:
+	unsigned val;
+};
+\end{lstlisting}
+
+
 \pagebreak
 
 
@@ -82,6 +98,14 @@ int main() {
   \item There are also using directives, which import ALL names of a namespace into the current scope.
   		\SubItem{Use them only in local scope to avoid "pollution" of your namespace.}
 \end{itemize}
+\begin{lstlisting}
+using std::string; 
+string s{"no std::"};
+int main() {
+	using namespace std; // local scope to avoid pollution
+	cout << "Hello John";
+}
+\end{lstlisting}
 
 \subsection{Anonymous Namespaces}
 \begin{itemize}
@@ -98,6 +122,13 @@ int main() {
 Types and (non-member) functions belonging to that type should be placed in a common namespace. The Advantage is \textit{Argument Dependent Lookup! ADL:} When the compiler encounter an unqualified function or operator call with an argument of a user-defined type it looks into the namespaces in which that type is defined to resolve the function\/operator. E.g. it is not necessary to write std:: in front of for\_each when std::vector::begin() is an argument of the function.
 
 % Sample with calendar and print function that does not work.. and ADL examples
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=0.75\linewidth]{adl}
+  \caption{Argument Dependent Lookup Example}
+\end{figure}
+
 
 
 \subsection{Arithmetic Types}

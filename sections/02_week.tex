@@ -16,9 +16,9 @@
 \end{itemize}
 
 \subsection{Definitions}
-Defining a variable consists of specifying its <type>, its <variable-name> and its <initial value>. Empty braces mean default initialisation. Using = for initialisation we can have the compiler determine its type (do not combine with braces!).
+Defining a variable consists of specifying its \lstinline|<type>|, its \lstinline|<variable-name>| and its \lstinline|<initial value>|. Empty braces mean default initialisation. Using = for initialisation we can have the compiler determine its type (do not combine with braces!).
 \begin{center}
-$<type> <variable-name> {<initial-value>};$
+	\lstinline|<type> <variable-name> {<initial-value>};|
 \end{center}
 \textbf{Constants}\\
  Adding the const keyword in front of the name makes the variable a single-assignment variable, aka a constant. A const must be initialised and is immutable.
@@ -67,11 +67,16 @@ auto y = x%2 ? 1 : 0; // int boolean conversion 0=false, others are true.=1
 \subsection{Const}
 \begin{itemize}
   \itemsep -0.5em 
-  \item Const should be used as often as possible, because it optimises the code.
+  \item Const should be used as often as possible for non-member variables, because it optimises the code.
   \item Const is comparable with the final from Java, although it has a higher guarantee that the variable is not changed.
-  \item Const variables must be initiaized!
-  \item To set const vars at compile time the keyword "constexpr" must be used.
+  \item Const variables must be initialized!
+  \item Const variables are immutable!
+  \item Some constants are required to be fixed at compile time $\rightarrow$ to enforce this use \lstinline|constexpr|.
 \end{itemize}
+
+\begin{lstlisting}
+double constexpr pi{3.14159};
+\end{lstlisting}
 
 \subsection{Auto}
 The keyword auto can be used to deduct the type of a variable automatically at the declaration.
@@ -83,7 +88,7 @@ auto const name = "Rick Deckard" // std::string
 \subsection{Strings}
  std::string is C++'s type for representing sequences of char (which is often only 8 bit). This Strings are mutable in C++ in contrast to Java. Literals like "ab" are not of type std::string they consist of const chars in a null terminated array.
  
- To have a std::string we need to append an s. This requires using namespace std::literals;.
+ To have a std::string we need to append an \textbf{s}. This requires using namespace std::literals;. This is important when we want to deduce types.
  
  \begin{lstlisting}[language=C++]
  void printName(std::string name) {
@@ -99,7 +104,11 @@ void toUpper(std::string & value) {
 	for (char & c : value) {
 		c = toupper(c); 
 	}
-}	
+}
+
+void toUpper(std::string & value) {
+	transform(cbegin(value), cend(value), begin(value), ::toupper); 
+}st	
 \end{lstlisting}
 \pagebreak
 
@@ -108,7 +117,7 @@ void toUpper(std::string & value) {
 \begin{itemize}
   \itemsep -0.5em 
   \item In the header files the inclusion of \lstinline[language=C++]{#include <iosfwd>} forward declaration header. This is sufficient for function declarations.
-  \item In a source file for "std::cin" and "std::cout" the \lstinline[language=C++]{#include <iostream>} should be used. This containts all the definitions needed for "std::cin" etc. If just one of the two stream objects is need use either \lstinline[language=C++]{#include <ostream>} or \lstinline[language=C++]{#include <istream>}. The last two dont include the "std::cin" and "std::cout".
+  \item In a source file for \lstinline|std::cin| and \lstinline|std::cout| the \lstinline[language=C++]{#include <iostream>} should be used. If just one of the two stream objects is need use either \lstinline[language=C++]{#include <ostream>} or \lstinline[language=C++]{#include <istream>}. The last two dont include the "std::cin" and "std::cout".
   \item In the main function "std::cin" and "std::cout" is used with the corresponding shift operators "<<", ">>".
   \item "std::istream" objects do return false if we are in an invalid stream state.
   \item "std::endl" flushes a buffered out stream. Better use "\textbackslash n". 
@@ -121,9 +130,9 @@ Functions taking a stream object must take it as a reference, because they provi
 Stream objects provide C++'s I/O mechanism with the help of the pre-defined globals: std::cin std::cout. Streams have a state that denotes if I/O was successful or not.
 \begin{itemize}
   \itemsep -0.5em 
-  \item Only .good() streams actually do I/O
-  \item You need to .clear() the state in case of an error
-  \item Reading a std::string can not go wrong, unless the stream is already \lstinline[language=C++]{!good()}.
+  \item Only \lstinline|.good()| streams actually do I/O
+  \item You need to \lstinline|.clear()| the state in case of an error
+  \item Reading a \lstinline|std::string| can not go wrong, unless the stream is already \lstinline|!good()|.
 \end{itemize}
 
 \textbf{Reading a std::strting Value }
@@ -164,16 +173,52 @@ std::string readSymbols(std::istream& in) {
 }
 \end{lstlisting}
 
+\textbf{Robust Reading of an int Value}
+\begin{lstlisting}
+int inputAge(std::istream & in) {
+	std::string line{};
+	while (getline(in, line)) {
+		std::istringstream is{line}; 
+		int age{-1}; 
+		if (is >> age) {
+			return age;
+		} 
+	}	
+	return -1;
+}
+\end{lstlisting}
+
 \subsection{Stream States}
 Formatted input on stream  is must check for is.fail() and is.bad(). If failed, is.clear() the stream and consume invalid input characters before continue.
 
 \begin{figure}[h!]
   \centering
-  \includegraphics[width=0.7\linewidth]{images/streamstates}
+  \includegraphics[width=0.6\linewidth]{images/streamstates}
   \caption{Stream States in C++}
 \end{figure}
 
+\textbf{Dealing with invalid Input}
+\begin{lstlisting}
+int inputAge(std::istream & in) {
+	while(in.good()) {
+		int age{-1};
+		if (in >> age) {
+			return age;
+		}
+		in.clear(); // remove failed flag 
+		in.ignore(); // ignore one char
+	}
+	return -1;
+}	
+\end{lstlisting}
+
 \subsection{Manipulators}
-For the formatting of the output a vide variety of manipulator can be used.
-% TODO add some manipulators
+For the formatting of the output a vide variety of manipulator can be used. These manipulators are defined in \lstinline|#include <iomanip>|.
+
+\begin{figure}[h]
+  \center
+  \includegraphics[width=0.8\linewidth]{manipulators}
+  \caption{C++ Manipulatoren für Streams [Michael Wieland]}
+\end{figure}
+
 

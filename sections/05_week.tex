@@ -4,7 +4,7 @@
 %You know how to overload operators for classes
 %You know the correct way to read and print objects
 
-\section{Classes and Operators}
+\section{Classes}
 Are defined in header files and not in *.cpp files! The implementation can then be done in a suitable file.
 \begin{itemize}
   \itemsep -0.5em 
@@ -29,18 +29,15 @@ Class type in a header file.
 #ifndef DATE_H_
 #define DATE_H_
 class Date {
-
 	int year, month, day;
-
 public:
 	Date() = default;
-	Date(int year, int month, int day) : year{year}, month{month}, day{day} {/*...*/}
-	static bool isLeapYear(int year) {/*...*/}
+	Date(int year, int month, int day) : year{year}, month{month}, day{day});
+	static bool isLeapYear(int year);
 	
 private:
-	bool isValidDate() const {/*...*/} 
+	bool isValidDate() const;
 };
-
 #endif /* DATE_H_ */
 \end{lstlisting}
 
@@ -70,7 +67,6 @@ bool Date::isLeapYear(int year) {
   \item public: visible from everywhere; for the interface of the class
 \end{itemize}
 
-
 \textbf{Static Member Functions and Variables}\\
 No $static$ in *.cpp file only in *.h file!
 
@@ -89,19 +85,19 @@ Function with name of the class and no return type.
 class Date {
 public:
     Date(int year, int month, int day);
-    Date(); // Default-Constructor
+    Date(); // Default-Constructor implicitly available if no other ctor
     Date() = default; // explizit Default-Constructor
     Date(Date const &); // Copy-Constructor
     Date(Date &&); // Move-Constructor
-    explicit Date(std::string const &); // Typeconversation-Constructor
-    Date(std::initializer_list<Element> elements); // Initializer List-Constructor
+    explicit Date(std::string const &); // Typeconversion-Constructor
+    Date(std::initializer_list<T> elements); // Initializer List-Constructor
     ~Date(); // Destructor
     Date(Date const &) = delete; // delete implicit Copy-Constructor
 };
 \end{lstlisting}
 
-\subsection{Defaulted Constructor}
-In order no to state the default constructor explicitly in the cpp file it can be defined in the header file of the class. This is also possible for the move and the copy constructor.
+\subsubsection{Defaulted Constructor}
+In order no to state the default constructor explicitly in the cpp file it can be defined in the header file of the class. This is also possible for the move and the copy constructor. This makes sure we don't have to implement it again.
 \begin{lstlisting}[language=C++]
 #ifndef DATE_H_
 #define DATE_H_
@@ -114,14 +110,62 @@ class Date {
 #endif /* DATE_H_ */
 \end{lstlisting}
 
+\subsubsection{Deleted Constructors}
+Some special member functions/constructors are implicitly avaiable in member classes and this is not alway wanted. We can hide this functions or mark them as deleted.
+
+\begin{lstlisting}
+class Banknote {
+	int value;
+	//...
+	Banknote(Banknote & const) = delete; // deleted copy ctor
+};
+\end{lstlisting}
+
+\subsubsection{Delegating Constructors}
+Similar to Java constructors can call other constructors. 
+\begin{lstlisting}
+#include <Date.h>
+Date::Date(int year, int month, int day) : Date{year, Month(month), day} {}
+\end{lstlisting}
+
+\subsection{Member Functions}
+Don't violate the invariant! Every Class has a implicit \lstinline|this->member-variable| object. It is allowed to call const member functions from non-const member functions but not visa-versa!
+
+\subsection{Static}
+\subsubsection{Static Member Functions}
+Have no \lstinline|this| object, Cannot be const in implementation! And have no \lstinline|static| keyword in implementation.
+
+\begin{lstlisting}
+#include <Date.h>
+bool Date::isLeapYear(int year) { // no static in implementation!
+	return !(year % 4) && ((year % 100) || !(year % 400));
+}
+\end{lstlisting}
+
+\subsubsection{Static Member Variables}
+Also no \lstinline|static| keyword in implementation. static const member can be initialized directly.
+
+\begin{lstlisting}
+class Date {
+	static const Date myBirthday;
+	static Date favoriteStudentB;
+};
+
+#include <Date.h>
+Date const Date::myBirthday{2049, 01, 01};
+Date::favoriteStudent{1452, 05, 02};
+\end{lstlisting}
+
+
+
 \subsection{Inline Functions}
 Inline function is a function that is expanded in line when it is called. When the inline function is called whole code of the inline function gets inserted or substituted at the point of inline function call. This substitution is performed by the C++ compiler at compile time. Inline function may increase efficiency if it is small (All the functions defined inside the class are implicitly inline).
 
 \subsection{Friend Functions}
-A friend function can be given a special grant to access private and protected members.
+A friend function can be given a special grant to access private and protected members. Even though the prototypes for friend functions appear in the class definition, friends are not member functions.
 
 \subsection{Inheritance}
- Base classes are specified after the name: $class <name> : <base1>, ... , <baseN>$. Multiple inheritance is possible and inheritance can specify visibility. If no visibility is specified the default of the inheriting class is used.
+ Base classes are specified after the name: \lstinline|class <name> : <base1>, ... , <baseN>|. Multiple inheritance is possible and inheritance can specify visibility. If no visibility is specified the default of the inheriting class is used.
 
 \begin{lstlisting}[language=C++]
 class Base { 
@@ -138,14 +182,28 @@ class Sub : public Base {
 };	
 \end{lstlisting}
 
+Make sure to always check the default inheritenace visibilty!
+\begin{lstlisting}
+struct Vehicle {
+	Location location{}; 
+}; 
+class Car : Vehicle { // class inherits implicity private!
+public:
+	Route drive(Destination destination); 
+}; 
+void printLocation(Car & car) {
+	std::cout << car.location; // this field is private and cant be accessed!
+}
+\end{lstlisting}
+
 
 \pagebreak
 \section{Operator Overloading}
 Custom operators can be overloaded for user-defined types. Declared like a function, with a special name: <returntype> operator op(<parameters>);. 
-Unary operators -> one parameters and binary operators -> two parameters.
+Unary operators -> one parameters and binary operators -> two parameters. In this example we want to make a Date comparable. 
 
 \subsection{Free Operator}
-Free operator$<$ uses two parameters of Date each $const$ \& return type $bool$. Is inline when defined in header. The only problem we have is that we don't have access to private members.
+Free operator$<$ uses two parameters of Date each $const$ \& return type $bool$. Must be inline when defined in header. The only problem we have is that we don't have access to private members.
 
 \begin{lstlisting}[language=C++]
 // File Any.cpp
@@ -170,7 +228,7 @@ inline bool operator<(Date const & lhs, Date const & rhs) {
 \end{lstlisting}
 
 \subsection{Member Operator}
-Member operator$<$ uses one parameter of type $Date$, which is $const \&$, return type $bool$ and Right-hand side of operation. Implicit this object: $const$ due to qualifier, left-hand side of operation.
+Member operator$<$ uses one parameter of type $Date$, which is $const \&$, return type $bool$ and Right-hand side of operation. Implicit this object: $const$ due to qualifier, left-hand side of operation. Is implicit inline!
 \begin{lstlisting}[language=C++]
 // File Any.cpp
 #include "Date.h" 
@@ -192,7 +250,9 @@ class Date {
 };
 \end{lstlisting}
 
-\subsection{Greater / smaller than / same Overload}
+\subsubsection{Implementing All Operators}
+Best practice is to define one member operator and build the free operators with the member operator.
+
 \begin{lstlisting}[language=C++]
 // word.h
 class Word {
@@ -205,8 +265,14 @@ public:
 
 	std::ostream & print(std::ostream & os) const;
 	std::istream & read(std::istream & is);
+	// Member operator as a basis for all other operators
+	bool operator<(Word const & rhs) const; // implicit inline
+	std::ostream & print(std::ostream & os) const {
+		os << year << "/" << month << "/" << day; 
+		return os;
+	}
+}
 
-	bool operator<(Word const & rhs) const;
 };
 
 inline std::ostream & operator<<(std::ostream & os, Word const & word) {

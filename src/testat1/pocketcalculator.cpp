@@ -1,12 +1,12 @@
+#include "calc.h"
+#include "pocketcalculator.h"
+#include "sevensegment.h"
+
 #include <iostream>
 #include <stdexcept>
 
-#include "calc.h" //Eigene Includes ("") sollten vor System-Include (<>) stehen
-#include "pocketcalculator.h" //Eigener Include sollte zuerst stehen
-#include "sevensegment.h"
-
 void pocketcalculator(std::istream & is, std::ostream & os) {
-	while (is.good()) { //Hier könnte mit std::getline einfach eine Zeile gelesen werden, von welcher man einen neuen istringstream kosntruiert. Dann müsste man den Stream-State nicht explizit verändern und das return bei peek() == -1 wäre nicht nötig.
+	while (is.good()) { //Hier koennte mit std::getline einfach eine Zeile gelesen werden, von welcher man einen neuen istringstream konstrutiert. Dann muesste man den Stream-State nicht explizit veraendern und das return bei peek() ==-1 waere nicht noetig.
 		int result = 0; //Die Variable sollte bei der ersten verwendung deklariert werden.
 		if (is.peek() == -1)
 		{
@@ -19,7 +19,7 @@ void pocketcalculator(std::istream & is, std::ostream & os) {
 		} catch (std::invalid_argument const &) //Gut, per const & gefangen.
 		{
 			printLargeError(os);
-			is.setstate(std::ios::goodbit); //Hier könnte man einfach is.clear() aufrufen. Das goodbit ist quasi kein gesetzter Wert (der Name ist irreführend).
+			is.setstate(std::ios::goodbit); //Hier koennte man einfach is.clear() aufrufen. Das goodbit ist quasi kein gesetzter Wert (der Name ist irrefuehrend).
 		}
 	}
 }

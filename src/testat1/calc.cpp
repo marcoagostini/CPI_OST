@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 int calc(int lhs, int rhs, char op) {
-	int result = 0; //Den Umweg über die lokale Variable bräuchte es nicht. Direkt mit return das Resultat zurückgeben wäre besser.
+	int result = 0; //Den Umweg ueber die lokale Variable breauchte es nicht. Direkt mit return das Resultat zurueckgeben waere besser.
 
 	switch (op)
 	{
@@ -27,14 +27,14 @@ int calc(int lhs, int rhs, char op) {
 			if (rhs == 0) throw std::invalid_argument("Modulo by 0 is forbidden!");
 			result = lhs % rhs;
 			break;
-			//Gut, ungültigen Operator abgefangen
+			//Gut, ungueltigen Operator abgefangen
 		default:  throw std::invalid_argument("Not available operator used.");
 	}
 	return result;
 }
 
 int calc(std::istream & in) {
-	int lhs, rhs = 0; //Dürfte man hier uninitialisiert lassen, da sie sowieso eingelesen oder sonst nicht verwendet werden.
+	int lhs, rhs = 0; //Duerfte man hier uninitialisiert lassen, da sie sowieso eingelesen oder sonst nicht verwendet werden.
 	char op;
 
 	if(in >> lhs >> op >> rhs) { //Gut

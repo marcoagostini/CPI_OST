@@ -7,7 +7,7 @@
 \section{Function Templates}
 \begin{itemize}
   \itemsep -0.5em 
-  \item Can be compared as a Generic in Java. The keyword "template" is used to declare a template.
+  \item Can be compared to a Generic in Java. The keyword "template" is used to declare a template.
   \item The template parameter list contains one or more templates parameters.
   \item C++ uses duck-typing. So every type can be used as argument as long as it supports the used operations.
   \item Function templates are normally defined and implemented in a header file.
@@ -21,13 +21,16 @@ template <Template-Parameter-List>
 FunctionDefinition
 \end{lstlisting}
 
+\textbf{Template Definition}\\
+Templates are usually defined in a header file. Type checking happens twice: When the template is defined: Only basic checks are performed: syntax and resolution of names that are independent of the template parameters, When the template is instantiated (used): The compiler checks whether the template arguments can be used as required by the template.
+ 
 \begin{lstlisting}[language=C++]
-// file min.h
+// file min.h - Template definition
 template <typename T>
 T min(T left, T right) {
 	return left < right ? left : right;
 }
-// file smaller.cpp
+// file smaller.cpp - Template usage
 #include "min.h"
 #include <iostream>
 int main() {
@@ -39,7 +42,11 @@ int main() {
 }
 \end{lstlisting}
 
+\textbf{Template Instantiation}\\
+The Compiler: resolves the function template, figures out the themplate arguments, instantiates the template for the arguments, checks the types for correct usage.
+
 \textbf{Template Argument Deduction}
+ The compiler will try to figure out the function template's arguments from the call. Pattern matching on the function parameter list is used for deducing the correct argument.
 
 
 \subsection{Variadic Templates}
@@ -72,5 +79,8 @@ int main() {
 	int i{42}; double d{1.25}; std::string book{"Lucid C++"};
 	printAll(std::cout, i, d, book);
 }
-
 \end{lstlisting}
+
+\subsubsection{Overloading}
+Multiple function templates with the same name can exist. As long as they can be distinguished by their parameter list.
+

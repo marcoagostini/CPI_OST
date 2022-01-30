@@ -10,7 +10,7 @@
   \item Functions are always written in lower Camel Case
   \item A function must be declared always in a header file before the function is used
   \item A good function has a maximum of five parameters and does exactly one thing
-  \item The call of the function parameters is not defined.
+  \item The call sequence of the function parameters is not defined.
   \item The main function does implicit return a "0".
   \item Auto should not be used as a return type, exceptions are: inline, template or constexpr functions in header files.
   \item Void should not be used as a function parameter
@@ -42,21 +42,34 @@ void incr(int & var, unsigned delta);
 
 \begin{itemize}
   \itemsep -0.5em 
-  \item Value Parameter - Default void f(type par);
-  \item Reference Parameter - side-effect void f(type \& par);
-  \item Const-Reference Parameter - optimisation void f(type const \& par);
-  \item Const Value Parameter - Prevent changing the para void f(type const par);
+  \item Value Parameter - Default \lstinline|void f(type par)|
+  \item Reference Parameter - side-effect \lstinline|void f(type & par)|
+  \item Const-Reference Parameter - optimisation \lstinline|void f(type const & par)|
+  \item Const Value Parameter - Prevent changing the parameter in the function \lstinline|void f(type const par)|.
 \end{itemize}
 
-\textbf{Function Return Type} \\
+\textbf{Function Return Type}
 \begin{itemize}
   \itemsep -0.5em 
-  \item By (Const) Value - default type f(); or type const f();
-  \item By Reference - Only return a reference parameter (or a call member variable from a member function) type \& f(); or type const \& f();
+  \item By Value - default \lstinline|type f()|
+  \item By Const Value - don't do this!  \lstinline|type const f()|.
+  \item By Reference - Only return a reference parameter (or a call member variable from a member function) \lstinline|type & f()| or \lstinline|type const & f()|.
 \end{itemize}
 
 \textbf{Functions as Parameters} \\
 Functions are "first class" objects in C++. You can pass them as augment and you can keep them in reference variables.
+
+\subsubsection{Function return type deduction}
+In function definitions the return type can be declared auto.  The actual return type will be deduced from the return statements in the function's body, the body must be present for that!!\\
+
+ If the return type of a function is declared as auto a trailing return type can specify the return type. In this case the function body is not required when specifying a trailing return type.
+ 
+ \begin{lstlisting}
+auto middle(std::vector<int> const & c) -> int;
+auto isOdd = [](auto value) -> bool {
+	return value % 2; 
+};
+\end{lstlisting}
 
 \subsection{Variadic Arguments}
 Variadic functions take a variable number of arguments. This example is even a template function with variadic arguments.
@@ -82,7 +95,7 @@ void printAll(First const & first, Types const &...rest) {
 Defining Inline functions. Auto const for function variable for Lambda. [] introduces a Lambda function. Can contain captures: [=] or [\&] to access variables from scope.
 \begin{lstlisting}[language=C++]
 auto const g = [](char c) -> {
-	return std::toupper(c)M
+	return std::toupper(c);
 };
 g('a');
 \end{lstlisting}
@@ -107,11 +120,29 @@ auto l = [x]() mutable {
 auto const l = [&x]() {
 	std::cout << ++x;
 };
+
+// Capturing all local variables by Value
+auto l = [=]() mutable {
+	std::cout << x++;
+};
+// Capturing all local variables by reference
+auto l = [&]() mutable {
+	std::cout << x++;
+};
+
+// New local variable can be specified in capture
+auto squares = [x=1]() mutable {
+	std::cout << x *= 2;
+};
 \end{lstlisting}
+
+
 
 \subsection{Functor}
 Functors are types which provide an operation. Functors have an overloaded call operator. Lambdas internally work with functors. The \lstinline|operator()| function can theoretically be overload as often as needed.
-\begin{lstlisting}[language=C++]
+
+%TODO add functor classes
+\begin{lstlisting}
 struct Accumulator {
   int count{0};
   int accumulated_value{0};
@@ -136,10 +167,28 @@ int main(int argc, char **argv) {
 }
 \end{lstlisting}
 
+\subsection{Predicates}
+A function or a lambda returning bool (or a type convertible to bool). Is used to check a criterion or a condition.
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=0.6\linewidth]{unarypredicat}
+  \caption{Unary Predicate}
+\end{figure}
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=0.6\linewidth]{binarypredicate}
+  \caption{Binary Predicate}
+\end{figure}
+
+
+
+
 
 \pagebreak
 \section{Exceptions}
-An exception can throw any copyable type. No means to specify what could be thrown. No check if you catch an exception that might be thrown at call-site. No meta-information is available as part of the exception. Exception thrown while exception is propagated results in a program abort (not while caught). 
+An exception can throw any copyable type. There is no check if you catch an exception that might be thrown at call-site. Exception thrown while exception is propagated results in a program abort (not while caught). 
 
 \subsection{Failing Functions}
 What should we do, if a function cannot fulfil its purpose?
@@ -207,4 +256,17 @@ The Standard Library has some pre-defined exception types that you can also use 
 
 \subsection{Keyword noexcept}
 Functions can be declared to explicitly not throw an exception with the noexcept keyword. The compiler does not need to check it.  If an exception is thrown (directly or indirectly) from a noexcept function the program will terminate.
+
+\begin{lstlisting}
+int add(int lhs, int rhs) noexcept {
+	return lhs + rhs; 
+}
+// -------
+void fail() {
+	throw 1; 
+}
+void lie() noexcept {
+	fail(); // program fails
+}
+\end{lstlisting}
 

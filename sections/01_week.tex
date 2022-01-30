@@ -1,7 +1,6 @@
-\tableofcontents
-\pagebreak
 
-\section{Introduction}
+
+\section{Basic Concepts}
 \subsection{Why C++?}
 \begin{itemize}
   \itemsep -0.5em 
@@ -76,15 +75,15 @@ C++ has the advantage of direct compilation into machine code. This eliminates t
 
 \textbf{Defining Functions}
 \begin{center}
-	$<return-type> <function-name> (<parameters>) \{ /* body */ \}$
+	\lstinline|<return-type> <function-name> (<parameters>) \{ /* body */ \}|
 \end{center}
- Tells the compiler that there is a function named $<function-name>$ that takes the parameters $<parameters>$ and returns a value of type $<return-type>$. The Signature of a function is just the combination of name and the parameter types. 
+ Tells the compiler that there is a function named \lstinline|<function-name>| that takes the parameters \lstinline|<parameters>| and returns a value of type \lstinline|<return-type>|. The Signature of a function is just the combination of name and the parameter types. 
  
-\textbf{One Definition Rule}\\ 
- While a program element can be declared several times without problem there can be only one definition of it. \textbf{(ODR = One Definition Rule)}
+\textbf{One Definition Rule (ODR)}\\ 
+ While a program element can be declared several times without problem there can be only one definition of it.
  
 \textbf{Include Guard}\\
-Include guards ensure that a header file is only included once. Multiple inclusions could violate the One Definition Rule when the header contains definitions.
+Include guards ensure that a header file is only included once. Multiple inclusions could violate the One Definition Rule when the header contains definitions. Is not required for function declarations but for type definitions in header files.
 \begin{lstlisting}[language=C++]]
 #ifndef SAYHELLO_H_
 #define SAYHELLO_H_

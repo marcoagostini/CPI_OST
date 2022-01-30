@@ -3,7 +3,7 @@ Inheritance is always then used, when specific components want to be reused and 
 
 \begin{itemize}
   \itemsep -0.5em 
-  \item Inheritance is default public (Classes). For structs the inheritance is private.
+  \item Inheritance is default public (structs). For classes the inheritance is private.
   \item The constructors are not inherited implicitly we have to specify that.
   \item The parent is always constructed first and after that the children.
   \item Assining or send parameters per value from an inherited class to the base class result in \textbf{Object Slicing}.
@@ -35,6 +35,7 @@ public:
 \begin{itemize}
   \itemsep -0.5em 
   \item Operator and function overloading and templates allow polymorphic behaviour at compile time
+  \item Basae class is required to have virtual member functions
   \item Dynamic polymorphism needs object references or (smart) pointers to work
   	\SubItem{Syntax overhead}
   	\SubItem{The base class must have a good abstratction}
@@ -76,8 +77,8 @@ in main() {
   \item To achieve dynamic polymorphism "virtual" member functions are required
   \item "Virtual" member functions are bound dynamically.
   \item The virtual keyword ist automatically inherited and does not have to be restated at childs.
-  \item Its possible to state overriding functions with "override"
-  \item To override a virtual function the signatures habe to be the same!
+  \item The sub needs to state overriding functions with "override"
+  \item To override a virtual function the signatures has to be the same! (constnes included)
 \end{itemize}
 
 \begin{lstlisting}[language=C++]
@@ -153,6 +154,7 @@ struct abstractBase {
   \itemsep -0.5em 
   \item Classes with virtual members require a virtual Destructor
   \item Otherwise when allocated on the heap with make\_unique and assigned to a unique\_ptr only the destructor of Base is called
+  \item \lstinline|std::shared_ptr<T>| memorizes the actual type and knows which destructor to call.
 \end{itemize}
 
 \begin{lstlisting}[language=C++]
@@ -163,7 +165,7 @@ struct Fuel {
 
 struct Plutonium : Fuel {
   void burn() { std::cout << "split core\n"; }
-  ~Plutonium() { std::cout << "store many years\n"; }
+  ~Plutonium() { std::cout << "store many years\n"; } // automatically inherits virtual
 };
 
 int main() {
@@ -172,6 +174,33 @@ int main() {
 \end{lstlisting}
 
 \subsection{Object Slicing}
+Assigning or passing by value a derived class value to a base class variable/parameter incurs object slicing. Only base class member variable are transferred.
+
+\begin{lstlisting}
+struct Base {
+	int member{};
+	explicit Base(int initial) :
+		member{initial}{} 
+	virtual ~Base() = default;
+	virtual void modify() { member++; } 
+	void print(std::ostream & out) const;
+};
+struct Derived : Base {
+	using Base::Base; // inherit constructor
+	void modify() { member += 2; }
+};
+// main.cpp
+void modifyAndPrint(Base base) {
+	base.modify();
+	base.print(std::cout); 
+}
+int main() {
+	Derived derived{25};
+	modifyAndPrint(derived);  // Output: 26
+}
+\end{lstlisting}
+
+
 The object slicing problem can be solved if we set the copy operations as delted.
 \begin{lstlisting}[language=C++]
 struct Base {
@@ -179,5 +208,24 @@ struct Base {
 	Book(Book const & other) = deleted;
 }
 \end{lstlisting}
+
+\subsection{Member Hiding}
+Member functions in derived classes hide base class member with the same name, even if different parameters are used. By using the base class member we can solve the problem.
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=0.75\linewidth]{memberhiding}
+  \caption{Member Hiding Problem}
+\end{figure}
+
+\begin{figure}[h!]
+  \center
+  \includegraphics[width=0.75\linewidth]{memberresolution}
+  \caption{Member Hiding Problem Solution}
+\end{figure}
+
+
+
+
 
 

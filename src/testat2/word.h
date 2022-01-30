@@ -38,4 +38,3 @@ inline bool operator!=(Word const& lhs, Word const& rhs) {
 
 
 #endif
-

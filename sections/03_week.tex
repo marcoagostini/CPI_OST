@@ -5,7 +5,7 @@
 % You can interact with streams through iterators
 
 \section{Iterators}
-There are always two iterators used (begin() und end()). There is also the possibility to traverse a list from front to back (rbegin() and rend()). If the members are only read the const version (cbegin() and cend()) can be used.
+There are always two iterators used \lstinline|begin() end()|. There is also the possibility to traverse a list from front to back \lstinline|rbegin() rend()|. If the members are only read the const version \lstinline|cbegin() cend()| can be used.
 
 \subsection{Iteration}
 Its possible to index a vector like an array but there is no bounds check.    Accessing an element outside the valid range is Undefined Behavior.
@@ -28,7 +28,8 @@ for (size_t i = 0; i < v.size(); ++i) {  //Index is "unsigned" 0-1=MAX_INT
 \includegraphics[width=0.75\linewidth]{images/elementiteration}	
 \end{center}
 
-\textbf{Iteration with Iterators}
+\textbf{Iteration with Iterators} \\
+Elements can be accessed with \lstinline|*iterator|.
 \begin{lstlisting}[language=C++]
 for (auto it = std::begin(v); it != std::end(v); ++it) {
 	std::cout << (*it)++ << ", "; 
@@ -40,7 +41,7 @@ for (auto it = std::cbegin(v); it != std::cend(v); ++it) {
 \end{lstlisting}
 
 \subsection{Using Iterators with Algorithms}
- Each algorithm takes iterator arguments. The algorithm does what its name tells us. 
+ Each algorithm takes iterator arguments. The algorithm does what its name tells us. The most used ones are \lstinline|std::accumulate, std::distance|. 
  
 \begin{lstlisting}[language=C++]
 // Counting blanks in a string
@@ -96,6 +97,28 @@ Iterators connect streams and algorithms.  Streams (std::istream and std::ostrea
    	\item It ends when the stream is no longer good().
 \end{itemize}
 
+\begin{lstlisting}
+std::copy(std::begin(v), std::end(v), std::ostream_iterator<int>{std::cout, ", "});
+// In order to use shorter names we can use an alias
+using input =  std::istream_iterator<std::string>; 
+input eof{}; 
+input in{std::cin}; 
+std::ostream_iterator<std::string> out{std::cout, " "}; 
+std::copy(in, eof, out);
+\end{lstlisting}
+
+\subsection{Unformatted Input}
+The \lstinline|std::istream_iterator<T>| has the disadvantage, that it skips white space. In order to avoid that we need to use \lstinline|std::istreambuf_iterator<char>|. This is for char types only!
+
+\begin{lstlisting}
+using input = std::istreambuf_iterator<char>; 
+input eof{}; 
+input in{std::cin}; 
+std::ostream_iterator<char> out{std::cout, " "}; std::copy(in, eof, out);
+\end{lstlisting}
+
+
+
 \subsection{Types}
 There are five different types of iterators in C++.
 
@@ -139,3 +162,33 @@ struct random_access_iterator_tag : public bidirectional_iterator_tag { };
   \item Used for \lstinline|std::ostream_iterator|
   \item Writes the result without knowing the result.
 \end{itemize}
+
+\subsection{Iterator Functions}
+There are a number of functions defined in \lstinline|#include <iterator>| to be used with an iterator.
+
+\begin{description}
+	\item [std::distance()] counts the number of "hops" iterator start must make until it reaches goal
+	\item [std::advance()] lets the iterator hop n times.
+	\item [std::next] moves to iterator to the next element. Makes a copy of the argument.
+\end{description}
+
+\begin{lstlisting}
+int main() {
+	std::vector<int> primes{2, 3, 5, 7, 11, 13};
+	auto current = std::begin(primes); 
+	auto afterNext = std::next(current);  // step size 1
+	std::cout << "current: " << *current << " afterNext: " << *afterNext <<  '\n';
+	
+	std::advance(current, 1);  // Custom step size
+	std::cout << "current: " << *current << " afterNext: " << *afterNext << '\n';
+}
+\end{lstlisting}
+
+We can therefore loop with the help of iterators. Please prefer algorithmgs over this.
+\begin{lstlisting}
+std::vector<int> v{3, 1, 4, 1, 5, 9, 2, 6}; 
+for (auto it = cbegin(v); it != cend(v); ++it) {
+	std::cout << *it << " is " << ((*it % 2) ? "odd" : "even") << '\n'; 
+}
+\end{lstlisting}
+

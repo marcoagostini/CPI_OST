@@ -4,8 +4,8 @@
 #include <string>
 #include <ostream>
 
-//Die Magic Number 5 könnte man noch extrahieren. Wird weiter unten auch verwendet.
-const std::array<std::string, 5> ZERO{" - ", "| |", "   ", "| |", " - "}; //Namen die nur aus Grossbuchstaben bestehen, sollten in C++ nicht verwendet werden, da sie ein Präprozessor-Makro implizieren.
+//Die Magic Number 5 koennte man noch extrahieren. Wird weiter unten auch verwendet.
+const std::array<std::string, 5> ZERO{" - ", "| |", "   ", "| |", " - "}; ///Namen die nur aus Grossbuchstaben bestehen, sollten in C++ nicht verwendet werden, da sie ein Praeprozessor-Makro implizieren.
 const std::array<std::string, 5> ONE{"   ", "  |", "   ", "  |", "   "};
 const std::array<std::string, 5> TWO{" - ", "  |", " - ", "|  ", " - "};
 const std::array<std::string, 5> THREE{" - ", "  |", " - ", "  |", " - "};
@@ -25,15 +25,15 @@ const std::array<std::array<std::string, 5>, 11> DIGITS{ZERO, ONE,TWO, THREE, FO
 const std::array<std::array<std::string, 5>, 10> ERROR{E, R, R, O, R};
 
 void printLargeDigit(int i, std::ostream & out) {
-	//Die lokale Kopie outString bräuchte es nicht. Grundsätzlich ist aber nichts gegen erklärende lokale Variablen einzuwenden. outString ist aber kein sehr sprechender name und auch nicht so ganz richtig.
+	//Die lokale Kopie outString breauchte es nicht. Grundsaetzlich ist aber nichts gegen erklaerende lokale Variablen einzuwenden. outString ist aber kein sehr sprechender name und auch nicht so ganz richtig.
 	std::array<std::string, 5> const outString = DIGITS.at(i);
-		for (auto const & cref : outString){ //Hier hätte man den copy-Algorithmus verwenden können
+		for (auto const & cref : outString){ //Hier haette man den copy-Algorithmus verwenden koennen
 			out << cref << '\n';
 		}
 }
 
-//Tipp: Dies könnte etwas einfacher mit std::to_stirng gelöst werden.
-void splitNumber(std::vector<int> & digits, int number){ //Statt digits über einen Seiteneffekt zu verändern, wäre es besser den digits-Vector nicht als Parameter zu nehmen, sondern einfach einen neuen digits-Vector zurückzugeben (per value).
+//Tipp: Dies koennte etwas einfacher mit std::to_stirng geloest werden.
+void splitNumber(std::vector<int> & digits, int number){ //Statt digits ueber einen Seiteneffekt zu veraendern, waere es besser den digits-Vector nicht als Parameter zu nehmen, sondern einfach einen neuen digits-Vector zurueckzugeben (per value).
 	if(number > 9){
 		splitNumber(digits, (number/10));
 	}
@@ -60,7 +60,7 @@ void printLargeNumber(int number, std::ostream & out){
 		{
 			out << DIGITS[digit][i];
 		}
-			out << '\n'; //Einrückung
+			out << '\n'; //Einrueckung
 	}
 }
 
@@ -73,4 +73,4 @@ void printLargeError(std::ostream &out){
 	}
 }
 
-//Gute Lösung
+//Gute Loesung

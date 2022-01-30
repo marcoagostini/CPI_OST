@@ -14,18 +14,47 @@
 \end{itemize}
 
 Containers can be: default-constructed, copy-constructed from another container of the same type, equality compared, emptied with clear().
-\begin{itemize}
-	\itemsep -0.5em
-	\item Sequence Containers (vector, deque, list, array)
-		\SubItem{Elements are accessible in order as they were inserted/created.}
-		\SubItem{Find in linear time through the algorithm find.}
-	\item Associative Containers (set, multiset, map, multimap)
-		\SubItem{Elements are accessible in sorted order}
-		\SubItem{find as member function in logarithmic time}
-	\item Hashed Containers (unorered\_map, unordered\_multimap, unordered\_set, unorderd\_multiset)
-		\SubItem{Elements are accessible in unspecified order}
-		\SubItem{find as member function in constant time}
-\end{itemize}
+
+\begin{minipage}{0,5\linewidth}
+	\textbf{Sequence Containers}
+	\begin{itemize}
+		\item Elements are accessible in order as they were inserted/created.
+		\item Find in linear time through the algorithm find.
+		\item \lstinline|vector, dequq, list, array|
+	\end{itemize}
+	 
+\end{minipage}
+\begin{minipage}{0,5\linewidth}
+	\center
+	\includegraphics[width=0.5\linewidth]{scontainer}  
+\end{minipage}
+
+\begin{minipage}{0,5\linewidth}
+	\textbf{Associative Containers}
+	\begin{itemize}
+		\item Elements are accessible in sorted order
+		\item \lstinline|find| as member function in logarithmic time.
+		\item \lstinline|set, multiset, map, multimap|.
+	\end{itemize} 
+\end{minipage}
+\begin{minipage}{0,5\linewidth}
+	\center
+	\includegraphics[width=0.5\linewidth]{acontainer}  
+\end{minipage}
+
+\begin{minipage}{0,5\linewidth}
+	\textbf{Hashed Containers}
+	\begin{itemize}
+		\item Elements are accessible in unspecified order
+		\item \lstinline|find| as member function in constant time.
+		\item \lstinline|unorered_map, unordered_multimap, unordered_set, unorderd_multiset|
+	\end{itemize}  
+\end{minipage}
+\begin{minipage}{0,5\linewidth}
+	\center
+	\includegraphics[width=0.5\linewidth]{hcontainer}  
+\end{minipage}
+
 
 \begin{figure}[h!]
   \centering
@@ -34,6 +63,7 @@ Containers can be: default-constructed, copy-constructed from another container 
 \end{figure}
 
 \subsection{Common Container Constructors}
+Containers can be: default constructed, copy-constructed, equality compared, clear();
 \begin{lstlisting}[language=C++]
 // Constructor with Initializer List
 std::vector<int> v{1,2,3,5,6,11};
@@ -44,13 +74,15 @@ std::deque<int> q{begin(v), end(v)};
 \end{lstlisting}
 
 \subsection{Array}
-C++'s std::array<T, N> is a fixed-size Container.  T is a template type parameter (= placeholder for type). N is a positive integer, template non-type parameter (= placeholder for a value). Elements can be accessed with a subscript operator [] or at(). The size is bound to the array object and can be queried using .size();. Avoid plain C-Array whenever possible: \lstinline[language=C++]|int arr[]{1, 2, 3, 4, 5};|
+C++'s \lstinline|std::array<T, N>| is a fixed-size Container. T is a template type parameter (= placeholder for type). N is a positive integer, template non-type parameter (= placeholder for a value). Elements can be accessed with a subscript operator \lstinline|[] at()|. The size is bound to the array object and can be queried using .size();. \\
+Avoid plain C-array whenever possible: \lstinline|int arr[]{1, 2, 3, 4, 5};|
 \begin{itemize}
   \itemsep -0.5em 
-  \item at() throws an exception on invalid index access
-  \item $[]$ has undefined behavior on invalid index access Behavior
-  \item The size of an array must be known at compile-time and cannot be changed. Otherwise it contains N default-constructed elements: std::array<int, 5> emptyArray{};
+  \item \lstinline|at()| throws an exception on invalid index access
+  \item \lstinline|[]| has undefined behavior on invalid index access Behavior
+  \item The size of an array must be known at compile-time and cannot be changed. Otherwise it contains N default-constructed elements.
 \end{itemize}
+
 \begin{center}
 \includegraphics[width=0.75\linewidth]{images/array}
 \end{center}
@@ -58,7 +90,7 @@ C++'s std::array<T, N> is a fixed-size Container.  T is a template type paramete
 \subsection{Vector}
 \begin{itemize}
   \itemsep -0.5em 
-  \item C++'s std::vector<T> is a Container = contains its elements of type T (no need to allocate them).
+  \item C++'s \lstinline|std::vector<T>| is a Container = contains its elements of type T (no need to allocate them).
   \item The elements are allocated on the heap.
   \item If a vector is passed to a function we can prevent a copy when we pass it as const.
 \end{itemize}
@@ -102,11 +134,13 @@ std::cout << "no zero found \n"; }
   \item Lower efficiency in bulk operations.
   \item Only bi-directional iterators - no index access
 \end{itemize}
+
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.6\linewidth]{list}
   \caption{Double-Linked List}
 \end{figure}
+
 \begin{lstlisting}[language=C++]
 std::list<int> l = { 7, 5, 16, 8 };
 l.push_front(25);
@@ -118,21 +152,63 @@ if (it != l.end()) {
 }
 \end{lstlisting}
 
-\subsection{Double-ended Queue, Deque}
+\subsection{Singly-Linked List}
+\begin{itemize}
+	\itemsep -0.5em 
+	\item Efficient insertion AFTER any position, but clumsy with iterator to get "before" the position.
+	\item Only supports forward iteration.
+	\item Avoid, except when there is a specific need! better use double-linked list.
+\end{itemize}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.6\linewidth]{linkedlist}
+  \caption{Singly-Linked List}
+\end{figure}
+
+\begin{lstlisting}
+std::list<int> l (5, 1);
+\end{lstlisting}
+
+
+\subsection{Double-ended Queue (Deque)}
 Are like a vector, but additionally elements can be added efficiently to the start of the container.
+
 \begin{figure}[h!]
   \centering
   \includegraphics[width=0.75\linewidth]{deque}
   \caption{Deque}
 \end{figure}
 
+\subsection{Stack, LIFO Adapter}
+\begin{itemize}
+  \itemsep -0.5em 
+  \item Uses a double ended queue (or vector, list) and limits its functionality to stack operations.
+  \item Iteration is not possible!
+\end{itemize}
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=0.75\linewidth]{stack}
+  \caption{Stack}
+\end{figure}
+
+\begin{lstlisting}
+std::stack<int> s{}; 
+s.push(42); 
+std::cout << s.top(); 
+s.pop();
+\end{lstlisting}
+
 \subsection{Queue, FIFO Adapter}
-In contrast to the Stack takes "pop()" the element from the begin of the Queue.
+In contrast to the Stack takes "pop()" the element from the begin of the Queue. 
+
 \begin{figure}[h!] 
   \centering
   \includegraphics[width=0.75\linewidth]{queue}
   \caption{Queue}
 \end{figure}
+
 \begin{lstlisting}[language=C++]
 std::queue<int> q{};
 q.push(42);
@@ -141,12 +217,8 @@ q.pop();
 \end{lstlisting}
 
 
-\subsection{Stack, LIFO Adapter}
-\begin{figure}[h!]
-  \centering
-  \includegraphics[width=0.75\linewidth]{stack}
-  \caption{Stack}
-\end{figure}
+
+
 
 \subsection{Set}
 The set does save all the elements in a tree. As a result there are no duplicates and all the elements are sorted automatically.
@@ -170,7 +242,13 @@ std::transform(input.begin(), input.end(), inserter(myset, myset.begin()), [](ch
 // print
 std::ostream_iterator<char> out {std::cout}
 std::copy(myset.begin(), myset.end(), out};
+\end{lstlisting}
 
+\subsection{Unorderet Set}
+Has no sorting and a more efficient lookup. Standard lacks feature for creating own hash functions.
+
+\begin{lstlisting}
+std::unordered_set<char> const vowels{'a', 'e', 'i', 'o', 'u'};
 \end{lstlisting}
 
 \subsection{Multiset}
@@ -209,3 +287,4 @@ for(auto const & p:vowels) {
 
 \subsection{Multimap}
 Allows to have multiple keys.
+

@@ -1,5 +1,5 @@
 \section{STL Algorithms}
-The "algorithm.h" are the algorithms defined for general purpose. and in the "numeric.h" are the general numeric functions.
+The \lstinline|algorithm.h| are the algorithms defined for general purpose. and in the \lstinline|numeric.h| are the general numeric functions.
 
 What is are the advantages of the STL algorithms?
 \begin{itemize}
@@ -13,13 +13,7 @@ What is are the advantages of the STL algorithms?
 		\SubItem{Algorithms might perform better than handwritten loops}
 \end{itemize}
 
-\textbf{Iterator for Ranges}
-\begin{itemize}
-  \itemsep 0em 
-  \item First - Iterator pointing to the first element.
-  \item Last - Iterator pointing to the last element.
-  \item if First == Last the range is empty.
-\end{itemize}
+
 
 \begin{lstlisting}[language=C++]
 std::vector<int> values{54, 23, 17, 95, 85, 57, 12, 9}; 
@@ -27,5 +21,48 @@ std::xxx(begin(values), end(values), ...);
 \end{lstlisting}
 
 \subsection{Examples}
+\subsubsection{for\_each}
+\begin{lstlisting}
+std::vector<unsigned> values{3, 0, 1, 4, 0, 2};
+
+auto f = [](unsigned v) {}; 
+std::for_each(begin(values), end(values), f);
+\end{lstlisting}
+
+\subsubsection{merge}
+Merging two SORTED ragnes.
+\begin{lstlisting}
+std::vector<int> r1{9, 12, 17, 23, 54, 57, 85, 95}; 
+std::vector<int> r2{2, 30, 32, 41, 49, 63, 72, 88}; 
+std::vector<int> d(r1.size() + r2.size(), 0);
+std::merge(begin(r1), end(r1), begin(r2), end(r2), begin(d));
+\end{lstlisting}
+
+\subsubsection{accumlate}
+Sums elements are addabale (+) operator or based on a custom binary function.
+\begin{lstlisting}
+std::vector<std::string> longMonths{"Jan", "Mar", "May", "Jul", "Aug", "Oct", "Dec"}; 
+std::string accumulatedString = std::accumulate(
+	next(begin(longMonths)), //Second element 
+	end(longMonths), //End 
+	longMonths.at(0), //First element, usually the neutral element
+	[](std::string const & acc, std::string const & element) {
+		return acc + ", " + element;
+}); //Jan, Mar, May, Jul, Aug, Oct, Dec
+\end{lstlisting}
+
+%TODO add _if
+%TODO add _n
+%TODO add Heap
+%TODO add 
 
 \subsection{Pitfalls}
+\begin{description}
+	\item [Mismatching Iterator Pairs]  It is mandatory that the iterators specifying a range need to belong to the same range. Advancing the "first" iterator has to reach the "last" iterator eventually (without leaving the range).
+	\item [Reserving Enough Space] If you use an iterator for specifying the output of an algorithm you, need to make sure that enough space is allocated
+	\item [Input Validation] Some operations on containers invalidate its iterators. 
+\end{description}
+
+
+
+\pagebreak
